@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllProcessComponent } from './all-process.component';
+import { AllProcessComponent } from './process.component';
 
 describe('AllProcessComponent', () => {
   let component: AllProcessComponent;
@@ -8,9 +8,8 @@ describe('AllProcessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AllProcessComponent]
-    })
-    .compileComponents();
+      imports: [AllProcessComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AllProcessComponent);
     component = fixture.componentInstance;

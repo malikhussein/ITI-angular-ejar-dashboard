@@ -1,15 +1,19 @@
 <div class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
   <div class="sidebar-header">
-    @if (!isCollapsed) {
+    @if (!isCollapsed && !isSmallScreen) {
       <img [src]="LogoImage" alt="Logo" class="logo" />
     }
-    <div class="toggle-btn" (click)="toggleSidebar()">
-      @if (isCollapsed) {
-        <i class="fas fa-bars"></i>
-      } @else {
-        <i class="fas fa-times"></i>
-      }
-    </div>
+    @if (isSmallScreen) {
+      <img [src]="LogoImage" alt="Logo" class="logo-small" />
+    } @else {
+      <div class="toggle-btn" (click)="toggleSidebar()">
+        @if (isCollapsed) {
+          <i class="fas fa-bars"></i>
+        } @else {
+          <i class="fas fa-times"></i>
+        }
+      </div>
+    }
   </div>
   <ul class="nav flex-column">
     @for (item of menuItems; track item.path) {
