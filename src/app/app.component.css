@@ -1,0 +1,30 @@
+.dashboard-container {
+  height: 100vh;
+  display: flex;
+}
+
+.main-wrapper {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-wrapper.shifted {
+  margin-left: 60px;
+}
+
+.content {
+  padding: 20px;
+  background-color: #F5F7FA;
+  height: calc(100vh - 64px);
+}
+
+@media (max-width: 768px) {
+  .main-wrapper {
+    margin-left: 60px;
+  }
+
+  .main-wrapper.shifted {
+    margin-left: 0;
+  }
+}

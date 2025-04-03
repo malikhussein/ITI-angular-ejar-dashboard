@@ -1,0 +1,26 @@
+<div class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
+  <div class="sidebar-header">
+    @if (!isCollapsed) {
+      <img [src]="LogoImage" alt="Logo" class="logo" />
+    }
+    <div class="toggle-btn" (click)="toggleSidebar()">
+      @if (isCollapsed) {
+        <i class="fas fa-bars"></i>
+      } @else {
+        <i class="fas fa-times"></i>
+      }
+    </div>
+  </div>
+  <ul class="nav flex-column">
+    @for (item of menuItems; track item.path) {
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+          <i [class]="item.icon"></i>
+          @if (!isCollapsed) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      </li>
+    }
+  </ul>
+</div>
