@@ -108,3 +108,22 @@ i {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.modal-sm .modal-content {
+  max-width: 350px;
+}
+
+.modal-body.text-center {
+  padding: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}

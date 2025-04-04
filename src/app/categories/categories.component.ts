@@ -19,7 +19,8 @@ export class AllCategoriesComponent implements OnInit {
   showModal = signal<boolean>(false);
   errorMessage = signal<string>('');
   showIconDropdown = signal<boolean>(false);
-
+  showDeleteModal = signal<boolean>(false);
+  categoryToDelete = signal<string | null>(null);
   availableIcons = [
     { value: 'fa-home', label: 'Home' },
     { value: 'fa-book', label: 'Book' },
@@ -43,7 +44,6 @@ export class AllCategoriesComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
-  
   get selectedIconLabel(): string {
     const selectedIcon = this.availableIcons.find(icon => icon.value === this.newCategory().icon);
     return selectedIcon ? selectedIcon.label : 'Select an icon';
@@ -145,15 +145,31 @@ export class AllCategoriesComponent implements OnInit {
     });
   }
 
-  deleteCategory(id: string) {
-    if (confirm('Are you sure you want to delete this category?')) {
+
+  openDeleteModal(id: string) {
+    this.categoryToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
+
+
+  closeDeleteModal() {
+    this.showDeleteModal.set(false);
+    this.categoryToDelete.set(null);
+  }
+
+  //delete category
+  confirmDelete() {
+    const id = this.categoryToDelete();
+    if (id) {
       this.categoryService.deleteCategory(id).subscribe({
         next: () => {
           this.loadCategories();
           this.toastr.success('Category deleted');
+          this.closeDeleteModal();
         },
         error: () => {
           this.toastr.error('Error deleting category');
+          this.closeDeleteModal();
         }
       });
     }
