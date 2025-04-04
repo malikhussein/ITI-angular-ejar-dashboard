@@ -66,7 +66,7 @@
                 } @else {
                   <td>{{ category._id }}</td>
                   <td>{{ category.name }}</td>
-                  <td><i [class]="'fas ' + category.icon"></i> {{ category.icon }}</td>
+                  <td><i [class]="'fas ' + category.icon"></i></td>
                   <td>
                     <button class="btn btn-warning btn-sm me-2" (click)="startEdit(category)">Edit</button>
                     <button class="btn btn-danger btn-sm" (click)="deleteCategory(category._id)">Delete</button>
