@@ -2,8 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #34495e;
-  color: white;
+  background-color: #ffffff;
+  color: #8B909A;
   padding: 10px 20px;
   height: 64px;
 }
@@ -22,9 +22,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color:#597896;
+  background-color:#F5F7FA;
 }
 
 .right-section {
   max-width: 300px;
+}
+
+.btn-link {
+  text-decoration: none;
+  color: #8B909A;
+}
+
+.btn-link:hover {
+  color: #B72A67;
 }
