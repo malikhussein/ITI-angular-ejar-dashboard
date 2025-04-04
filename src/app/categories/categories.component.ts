@@ -18,11 +18,36 @@ export class AllCategoriesComponent implements OnInit {
   editCategory = signal<any | null>(null);
   showModal = signal<boolean>(false);
   errorMessage = signal<string>('');
+  showIconDropdown = signal<boolean>(false);
+
+  availableIcons = [
+    { value: 'fa-home', label: 'Home' },
+    { value: 'fa-book', label: 'Book' },
+    { value: 'fa-shopping-cart', label: 'Shopping Cart' },
+    { value: 'fa-coffee', label: 'Coffee' },
+    { value: 'fa-bicycle', label: 'Bicycle' },
+    { value: 'fa-car', label: 'Car' },
+    { value: 'fa-camera', label: 'Camera' },
+    { value: 'fa-film', label: 'Film' },
+    { value: 'fa-music', label: 'Music' },
+    { value: 'fa-paint-brush', label: 'Paint Brush' },
+    { value: 'fa-gamepad', label: 'Gamepad' },
+    { value: 'fa-laptop', label: 'Laptop' },
+    { value: 'fa-mobile-alt', label: 'Mobile' },
+    { value: 'fa-headphones', label: 'Headphones' },
+    { value: 'fa-rocket', label: 'Rocket' }
+  ];
 
   constructor(
     private categoryService: CategoryService,
     private toastr: ToastrService
   ) {}
+
+  
+  get selectedIconLabel(): string {
+    const selectedIcon = this.availableIcons.find(icon => icon.value === this.newCategory().icon);
+    return selectedIcon ? selectedIcon.label : 'Select an icon';
+  }
 
   ngOnInit() {
     this.loadCategories();
@@ -42,11 +67,22 @@ export class AllCategoriesComponent implements OnInit {
     this.newCategory.set({ name: '', icon: '' });
     this.showModal.set(true);
     this.errorMessage.set('');
+    this.showIconDropdown.set(false);
   }
 
   closeModal() {
     this.showModal.set(false);
     this.errorMessage.set('');
+    this.showIconDropdown.set(false);
+  }
+
+  toggleIconDropdown() {
+    this.showIconDropdown.set(!this.showIconDropdown());
+  }
+
+  selectIcon(icon: string) {
+    this.newCategory.update(current => ({ ...current, icon }));
+    this.showIconDropdown.set(false);
   }
 
   validateCategory(category: { name: string; icon: string }): string | null {

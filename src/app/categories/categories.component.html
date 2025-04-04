@@ -16,11 +16,30 @@
           <div class="modal-body">
             <div class="mb-3">
               <label class="form-label">Category Name</label>
-              <input type="text" class="form-control" [(ngModel)]="newCategory().name" />
+              <input type="text" class="form-control" [(ngModel)]="newCategory().name" placeholder="Enter category name" />
             </div>
             <div class="mb-3">
-              <label class="form-label">Icon Name</label>
-              <input type="text" class="form-control" [(ngModel)]="newCategory().icon" />
+              <label class="form-label">Choose Icon</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" (click)="toggleIconDropdown()">
+                  <i [class]="'fas ' + (newCategory().icon || 'fa-question')"></i>
+                  {{ selectedIconLabel }}
+                </button>
+                @if (showIconDropdown()) {
+                  <ul class="dropdown-menu show w-100" style="max-height: 200px; overflow-y: auto;">
+                    @for (icon of availableIcons; track icon.value) {
+                      <li>
+                        <a class="dropdown-item" (click)="selectIcon(icon.value)">
+                          <i [class]="'fas ' + icon.value"></i> {{ icon.label }}
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+              @if (errorMessage()) {
+                <div class="text-danger mt-2">{{ errorMessage() }}</div>
+              }
             </div>
           </div>
           <div class="modal-footer">
@@ -52,27 +71,22 @@
                 @if (editCategory()?._id === category._id) {
                   <td>{{ category._id | shortId }}</td>
                   <td>
-                    <input type="text" class="form-control"
-                      [(ngModel)]="editCategory()!.name" />
+                    <input type="text" class="form-control" [(ngModel)]="editCategory()!.name" />
                   </td>
                   <td>
-                    <input type="text" class="form-control"
-                      [(ngModel)]="editCategory()!.icon" />
+                    <input type="text" class="form-control" [(ngModel)]="editCategory()!.icon" />
                   </td>
                   <td>
                     <button class="btn btn-success btn-sm me-2" (click)="updateCategory()">Save</button>
                     <button class="btn btn-secondary btn-sm" (click)="editCategory.set(null)">Cancel</button>
                   </td>
                 } @else {
-                  <td>#{{ category._id | shortId:8}}</td>
+                  <td>#{{ category._id | shortId:8 }}</td>
                   <td>{{ category.name }}</td>
                   <td><i [class]="'fas ' + category.icon"></i></td>
                   <td>
-                    <i class="fas fa-edit fs-5 me-3 edite-icon"
-                      (click)="startEdit(category)" title="Edit"></i>
-
-                    <i class="fas fa-trash-alt fs-5 delete-icon"
-                      (click)="deleteCategory(category._id)" title="Delete"></i>
+                    <i class="fas fa-edit fs-5 me-3 edite-icon" (click)="startEdit(category)" title="Edit"></i>
+                    <i class="fas fa-trash-alt fs-5 delete-icon" (click)="deleteCategory(category._id)" title="Delete"></i>
                   </td>
                 }
               </tr>
