@@ -50,7 +50,7 @@
             @for (category of categories(); track category._id) {
               <tr>
                 @if (editCategory()?._id === category._id) {
-                  <td>{{ category._id }}</td>
+                  <td>{{ category._id | shortId }}</td>
                   <td>
                     <input type="text" class="form-control"
                       [(ngModel)]="editCategory()!.name" />
@@ -64,12 +64,15 @@
                     <button class="btn btn-secondary btn-sm" (click)="editCategory.set(null)">Cancel</button>
                   </td>
                 } @else {
-                  <td>{{ category._id }}</td>
+                  <td>#{{ category._id | shortId:8}}</td>
                   <td>{{ category.name }}</td>
                   <td><i [class]="'fas ' + category.icon"></i></td>
                   <td>
-                    <button class="btn btn-warning btn-sm me-2" (click)="startEdit(category)">Edit</button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteCategory(category._id)">Delete</button>
+                    <i class="fas fa-edit fs-5 me-3 edite-icon"
+                      (click)="startEdit(category)" title="Edit"></i>
+
+                    <i class="fas fa-trash-alt fs-5 delete-icon"
+                      (click)="deleteCategory(category._id)" title="Delete"></i>
                   </td>
                 }
               </tr>

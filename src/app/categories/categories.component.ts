@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 import { ToastrService } from 'ngx-toastr';
+import { ShortIdPipe } from '../pipes/short-id.pipe';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ShortIdPipe],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css']
 })
