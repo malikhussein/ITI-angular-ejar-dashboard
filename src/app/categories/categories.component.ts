@@ -16,27 +16,23 @@ export class AllCategoriesComponent implements OnInit {
   categories = signal<any[]>([]);
   newCategory = signal<{ name: string; icon: string }>({ name: '', icon: '' });
   editCategory = signal<any | null>(null);
-  showModal = signal<boolean>(false);
-  errorMessage = signal<string>('');
-  showIconDropdown = signal<boolean>(false);
+  showAddModal = signal<boolean>(false);
+  showEditModal = signal<boolean>(false);
   showDeleteModal = signal<boolean>(false);
   categoryToDelete = signal<string | null>(null);
+  showIconDropdown = signal<boolean>(false);
+
   availableIcons = [
     { value: 'fa-home', label: 'Home' },
     { value: 'fa-book', label: 'Book' },
-    { value: 'fa-shopping-cart', label: 'Shopping Cart' },
-    { value: 'fa-coffee', label: 'Coffee' },
     { value: 'fa-bicycle', label: 'Bicycle' },
     { value: 'fa-car', label: 'Car' },
     { value: 'fa-camera', label: 'Camera' },
-    { value: 'fa-film', label: 'Film' },
     { value: 'fa-music', label: 'Music' },
-    { value: 'fa-paint-brush', label: 'Paint Brush' },
     { value: 'fa-gamepad', label: 'Gamepad' },
     { value: 'fa-laptop', label: 'Laptop' },
     { value: 'fa-mobile-alt', label: 'Mobile' },
     { value: 'fa-headphones', label: 'Headphones' },
-    { value: 'fa-rocket', label: 'Rocket' }
   ];
 
   constructor(
@@ -45,7 +41,7 @@ export class AllCategoriesComponent implements OnInit {
   ) {}
 
   get selectedIconLabel(): string {
-    const selectedIcon = this.availableIcons.find(icon => icon.value === this.newCategory().icon);
+    const selectedIcon = this.availableIcons.find(icon => icon.value === (this.showAddModal() ? this.newCategory().icon : this.editCategory()?.icon));
     return selectedIcon ? selectedIcon.label : 'Select an icon';
   }
 
@@ -65,14 +61,24 @@ export class AllCategoriesComponent implements OnInit {
 
   openAddModal() {
     this.newCategory.set({ name: '', icon: '' });
-    this.showModal.set(true);
-    this.errorMessage.set('');
+    this.showAddModal.set(true);
     this.showIconDropdown.set(false);
   }
 
-  closeModal() {
-    this.showModal.set(false);
-    this.errorMessage.set('');
+  closeAddModal() {
+    this.showAddModal.set(false);
+    this.showIconDropdown.set(false);
+  }
+
+  openEditModal(category: any) {
+    this.editCategory.set({ ...category });
+    this.showEditModal.set(true);
+    this.showIconDropdown.set(false);
+  }
+
+  closeEditModal() {
+    this.showEditModal.set(false);
+    this.editCategory.set(null);
     this.showIconDropdown.set(false);
   }
 
@@ -81,7 +87,11 @@ export class AllCategoriesComponent implements OnInit {
   }
 
   selectIcon(icon: string) {
-    this.newCategory.update(current => ({ ...current, icon }));
+    if (this.showAddModal()) {
+      this.newCategory.update(current => ({ ...current, icon }));
+    } else if (this.showEditModal()) {
+      this.editCategory.update(current => ({ ...current, icon }));
+    }
     this.showIconDropdown.set(false);
   }
 
@@ -99,7 +109,6 @@ export class AllCategoriesComponent implements OnInit {
     const category = this.newCategory();
     const error = this.validateCategory(category);
     if (error) {
-      this.errorMessage.set(error);
       this.toastr.warning(error);
       return;
     }
@@ -107,7 +116,7 @@ export class AllCategoriesComponent implements OnInit {
     this.categoryService.addCategory(category).subscribe({
       next: () => {
         this.loadCategories();
-        this.closeModal();
+        this.closeAddModal();
         this.toastr.success('Category added successfully');
       },
       error: (err) => {
@@ -115,10 +124,6 @@ export class AllCategoriesComponent implements OnInit {
         this.toastr.error(message);
       }
     });
-  }
-
-  startEdit(category: any) {
-    this.editCategory.set({ ...category });
   }
 
   updateCategory() {
@@ -135,7 +140,7 @@ export class AllCategoriesComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.loadCategories();
-        this.editCategory.set(null);
+        this.closeEditModal();
         this.toastr.success('Category updated successfully');
       },
       error: (err) => {
@@ -145,19 +150,16 @@ export class AllCategoriesComponent implements OnInit {
     });
   }
 
-
   openDeleteModal(id: string) {
     this.categoryToDelete.set(id);
     this.showDeleteModal.set(true);
   }
-
 
   closeDeleteModal() {
     this.showDeleteModal.set(false);
     this.categoryToDelete.set(null);
   }
 
-  //delete category
   confirmDelete() {
     const id = this.categoryToDelete();
     if (id) {

@@ -49,6 +49,10 @@
   vertical-align: middle;
 }
 
+.table td:nth-child(2) {
+  text-transform: capitalize;
+}
+
 .modal-content {
   border-radius: 10px;
   border: none;
@@ -78,7 +82,7 @@ i {
 }
 
 .edite-icon {
-  color: #FFC600;
+  color: #ffc600;
   cursor: pointer;
 }
 
@@ -126,4 +130,14 @@ i {
 .btn-danger:hover {
   background-color: #c82333;
   border-color: #bd2130;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
 }
