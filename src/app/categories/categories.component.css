@@ -1,0 +1,78 @@
+.content-wrapper {
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-open .content-wrapper {
+  margin-left: 250px;
+}
+
+.sidebar-closed .content-wrapper {
+  margin-left: 60px;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f3f4f8;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.form-control {
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.btn {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f3f4f8;
+  font-weight: 600;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.modal-content {
+  border-radius: 10px;
+  border: none;
+}
+
+.modal-header {
+  background-color: #f3f4f8;
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem;
+}
+
+.btn-close {
+  filter: opacity(0.6);
+}
+
+.btn-close:hover {
+  filter: opacity(1);
+}
+
+i {
+  margin-right: 8px;
+}
