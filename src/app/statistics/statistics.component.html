@@ -1,1 +1,118 @@
-<p>statistics works!</p>
+
+<h2 class="mx-2">Dashboard</h2>
+    <br>
+
+    <div class="row mx-5">
+
+        <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-header">
+                <h3>
+                  <i style="color: #FFADED;" class="fas fa-user-plus"></i>
+                  <span class="mx-3">Total Users</span>
+                </h3>
+              </div>
+              <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                  <p>Last 7 days</p>
+                  <h1>{{ totalUsers }} Users</h1>
+                </div>
+                <div >
+                  <ngx-charts-line-chart
+                    [view]="userView"
+                    [scheme]="colorScheme"
+                    [results]="userLineChartData"
+                    [legend]="false"
+                    [xAxis]="true"
+                    [yAxis]="true"
+                    [showXAxisLabel]="false"
+                    [showYAxisLabel]="false"
+                    [autoScale]="true"
+                    [rotateXAxisTicks]="true"
+                  >
+                  </ngx-charts-line-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        <div class="col-md-4 ">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <i style="color: #FFADED;" class="fas fa-tasks"></i>
+                        <span class="mx-3">Total Process</span>
+                    </h3>
+                </div>
+                <div class="card-body ">
+                    <p>Last 7 days</p>
+                    <h1>500 Process</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 ">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <i style="color: #FFADED;" class="fas fa-boxes"></i>
+                        <span class="mx-3">Total Products</span>
+                    </h3>
+                </div>
+                <div class="card-body ">
+                    <p>Last 7 days</p>
+                    <h1>500 Products</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 my-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Total Costs</h3>
+                </div>
+                <div class="card-body ">
+                    <p>Last 7 days</p>
+                    <h1>1200 Costs</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 my-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Totel Catagories</h3>
+                </div>
+                <div class="card-body ">
+                    <p>Last 7 days</p>
+                    <h1>8 Catagories</h1>
+                </div>
+            </div>
+        </div>
+
+        <div  class="col-12 my-4 d-flex justify-content-center">
+            <div  style="width: fit-content; background-color: #F5F7FA;">
+              <div class="card-body">
+                <ngx-charts-bar-vertical
+                  [view]="view"
+                  [scheme]="colorScheme"
+                  [results]="chartData"
+                  [gradient]="false"
+                  [xAxis]="true"
+                  [yAxis]="true"
+                  [legend]="true"
+                  [showXAxisLabel]="true"
+                  [rotateXAxisTicks]="false"
+                  [showYAxisLabel]="true"
+                  [showGridLines]="true"
+                  xAxisLabel="Metric"
+                  yAxisLabel="Count"
+                >
+                </ngx-charts-bar-vertical>
+              </div>
+            </div>
+          </div>
+          
+          
+    </div>
+    
