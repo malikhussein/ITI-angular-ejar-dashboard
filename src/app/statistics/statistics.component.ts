@@ -70,7 +70,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   fetchTotalUsers(): void {
-    this.userService.getTotalUsers().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (res) => {
         (this.totalUsers = res.users.length), this.updateChartData();
       },

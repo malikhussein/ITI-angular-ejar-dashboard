@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { UserListComponent } from './admin/users/user-list/user-list.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/statistics', pathMatch: 'full' },
