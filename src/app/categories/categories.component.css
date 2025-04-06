@@ -1,0 +1,143 @@
+.content-wrapper {
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-open .content-wrapper {
+  margin-left: 250px;
+}
+
+.sidebar-closed .content-wrapper {
+  margin-left: 60px;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f3f4f8;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.form-control {
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.btn {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f3f4f8;
+  font-weight: 600;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.table td:nth-child(2) {
+  text-transform: capitalize;
+}
+
+.modal-content {
+  border-radius: 10px;
+  border: none;
+}
+
+.modal-header {
+  background-color: #f3f4f8;
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem;
+}
+
+.btn-close {
+  filter: opacity(0.6);
+}
+
+.btn-close:hover {
+  filter: opacity(1);
+}
+
+i {
+  margin-right: 8px;
+}
+
+.edite-icon {
+  color: #ffc600;
+  cursor: pointer;
+}
+
+.delete-icon {
+  color: rgb(253, 12, 12);
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  width: 100%;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-toggle::after {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.modal-sm .modal-content {
+  max-width: 350px;
+}
+
+.modal-body.text-center {
+  padding: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}

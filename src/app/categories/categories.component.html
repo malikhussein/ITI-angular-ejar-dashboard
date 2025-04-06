@@ -1,0 +1,152 @@
+<div class="container-fluid p-4 content-wrapper">
+  <!-- Add Category Button -->
+  <div class="mb-4">
+    <button class="btn btn-primary" (click)="openAddModal()">Add New Category</button>
+  </div>
+
+  <!-- Modal for Adding Category -->
+  @if (showAddModal()) {
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Category</h5>
+            <button type="button" class="btn-close" (click)="closeAddModal()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Category Name</label>
+              <input type="text" class="form-control" [(ngModel)]="newCategory().name" placeholder="Enter category name" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Choose Icon</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" (click)="toggleIconDropdown()">
+                  <i [class]="'fas ' + (newCategory().icon || 'fa-question')"></i>
+                  {{ selectedIconLabel }}
+                </button>
+                @if (showIconDropdown()) {
+                  <ul class="dropdown-menu show w-100" style="max-height: 200px; overflow-y: auto;">
+                    @for (icon of availableIcons; track icon.value) {
+                      <li>
+                        <a class="dropdown-item" (click)="selectIcon(icon.value)">
+                          <i [class]="'fas ' + icon.value"></i> {{ icon.label }}
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Close</button>
+            <button type="button" class="btn btn-primary" (click)="addCategory()">Add Category</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal for Editing Category -->
+  @if (showEditModal()) {
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Category</h5>
+            <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Category Name</label>
+              <input type="text" class="form-control" [(ngModel)]="editCategory()!.name" placeholder="Enter category name" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Choose Icon</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" (click)="toggleIconDropdown()">
+                  <i [class]="'fas ' + (editCategory()!.icon || 'fa-question')"></i>
+                  {{ selectedIconLabel }}
+                </button>
+                @if (showIconDropdown()) {
+                  <ul class="dropdown-menu show w-100" style="max-height: 200px; overflow-y: auto;">
+                    @for (icon of availableIcons; track icon.value) {
+                      <li>
+                        <a class="dropdown-item" (click)="selectIcon(icon.value)">
+                          <i [class]="'fas ' + icon.value"></i> {{ icon.label }}
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+            <button type="button" class="btn btn-success" (click)="updateCategory()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal for Delete Confirmation -->
+  @if (showDeleteModal()) {
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm Deletion</h5>
+            <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p>Are you sure you want to delete this category?</p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">No</button>
+            <button type="button" class="btn btn-danger" (click)="confirmDelete()">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Categories Table -->
+  <div class="card">
+    <div class="card-header">All Categories</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Icon</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of categories(); track category._id) {
+              <tr>
+                <td>#{{ category._id | shortId:8 }}</td>
+                <td>{{ category.name }}</td>
+                <td><i [class]="'fas ' + category.icon"></i></td>
+                <td>
+                  <i class="fas fa-edit fs-5 me-3 edite-icon" (click)="openEditModal(category)" title="Edit"></i>
+                  <i class="fas fa-trash-alt fs-5 delete-icon" (click)="openDeleteModal(category._id)" title="Delete"></i>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="4" class="text-center">No categories found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
