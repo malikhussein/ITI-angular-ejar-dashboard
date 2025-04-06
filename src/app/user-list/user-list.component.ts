@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { UserService } from '../user.service';
-import { User } from '../../models/user.model';
+import { UserService } from '../services/user.service';
+import { User } from '../models/user.model';
 import { jwtDecode } from 'jwt-decode';
 
 @Component({
@@ -11,7 +11,7 @@ import { jwtDecode } from 'jwt-decode';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, DatePipe],
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit {
 
   formErrors: { [key: string]: string } = {
     userName: '',
-    email: ''
+    email: '',
   };
   // For Delete Confirmation Modal
   confirmingDeleteUserId: string | null = null;
@@ -51,14 +51,17 @@ export class UserListComponent implements OnInit {
 
   currentAdminId: string = '';
 
-  constructor(private userService: UserService, private route: ActivatedRoute) {}
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const token = params['token'];
       const remember = params['remember'] === 'true';
-      console.log('Query params:', params);  
-  
+      console.log('Query params:', params);
+
       if (token) {
         if (remember) {
           localStorage.setItem('UserToken', token);
@@ -67,19 +70,25 @@ export class UserListComponent implements OnInit {
           sessionStorage.setItem('UserToken', token);
           localStorage.removeItem('UserToken');
         }
-        console.log('Token stored in localStorage:', localStorage.getItem('UserToken'));
-        console.log('Token stored in sessionStorage:', sessionStorage.getItem('UserToken'));
-  
+        console.log(
+          'Token stored in localStorage:',
+          localStorage.getItem('UserToken')
+        );
+        console.log(
+          'Token stored in sessionStorage:',
+          sessionStorage.getItem('UserToken')
+        );
+
         // Clean URL query parameters
         window.history.replaceState({}, '', window.location.pathname);
       }
-      
+
       this.extractCurrentAdminId();
       this.loadUsers();
     });
   }
-  
-    loadUsers() {
+
+  loadUsers() {
     this.loading = true;
     this.userService.getAllUsers().subscribe({
       next: (res) => {
@@ -89,7 +98,7 @@ export class UserListComponent implements OnInit {
       error: () => {
         this.showToastMessage('Failed to load users', 'error');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -117,9 +126,15 @@ export class UserListComponent implements OnInit {
     if (this.sortOption === 'name') {
       filtered.sort((a, b) => a.userName.localeCompare(b.userName));
     } else if (this.sortOption === 'newest') {
-      filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      filtered.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     } else if (this.sortOption === 'oldest') {
-      filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      filtered.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
     }
     return filtered;
   }
@@ -132,15 +147,22 @@ export class UserListComponent implements OnInit {
   toggleUserSelection(id: string) {
     if (id === this.currentAdminId) return; // prevent selecting yourself
     this.selectedUserIds.includes(id)
-      ? (this.selectedUserIds = this.selectedUserIds.filter((uid) => uid !== id))
+      ? (this.selectedUserIds = this.selectedUserIds.filter(
+          (uid) => uid !== id
+        ))
       : this.selectedUserIds.push(id);
   }
 
   toggleAllUsers(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    const filteredIds = this.filteredUsers().map(u => u._id).filter(id => id !== this.currentAdminId);
+    const filteredIds = this.filteredUsers()
+      .map((u) => u._id)
+      .filter((id) => id !== this.currentAdminId);
     if (checked && filteredIds.length === 0) {
-      this.showToastMessage('No selectable users (you cannot select yourself).', 'error');
+      this.showToastMessage(
+        'No selectable users (you cannot select yourself).',
+        'error'
+      );
     }
     this.selectedUserIds = checked ? filteredIds : [];
   }
@@ -170,20 +192,25 @@ export class UserListComponent implements OnInit {
   proceedDelete() {
     if (!this.confirmingDeleteUserId) return;
     if (this.confirmingDeleteUserId === this.currentAdminId) {
-      this.showToastMessage("You can't delete yourself from here. Please contact another admin.", 'error');
+      this.showToastMessage(
+        "You can't delete yourself from here. Please contact another admin.",
+        'error'
+      );
       this.confirmingDeleteUserId = null;
       return;
     }
     this.userService.deleteUser(this.confirmingDeleteUserId).subscribe({
       next: () => {
-        this.users = this.users.filter((u) => u._id !== this.confirmingDeleteUserId);
+        this.users = this.users.filter(
+          (u) => u._id !== this.confirmingDeleteUserId
+        );
         this.confirmingDeleteUserId = null;
         this.showToastMessage('User deleted successfully');
       },
       error: () => {
         this.confirmingDeleteUserId = null;
         this.showToastMessage('Failed to delete user', 'error');
-      }
+      },
     });
   }
 
@@ -197,7 +224,7 @@ export class UserListComponent implements OnInit {
         this.users = this.users.filter((u) => u._id !== id);
         this.showToastMessage('User deleted successfully');
       },
-      error: () => this.showToastMessage('Failed to delete user', 'error')
+      error: () => this.showToastMessage('Failed to delete user', 'error'),
     });
   }
 
@@ -207,7 +234,10 @@ export class UserListComponent implements OnInit {
 
   proceedBulkDelete() {
     if (this.selectedUserIds.includes(this.currentAdminId)) {
-      this.showToastMessage("You can't bulk delete yourself. Deselect yourself first.", 'error');
+      this.showToastMessage(
+        "You can't bulk delete yourself. Deselect yourself first.",
+        'error'
+      );
       this.showBulkDeleteConfirm = false;
       return;
     }
@@ -218,7 +248,8 @@ export class UserListComponent implements OnInit {
           this.users = this.users.filter((u) => !ids.includes(u._id));
           this.showToastMessage('Selected users deleted successfully');
         },
-        error: () => this.showToastMessage('Error deleting selected users', 'error')
+        error: () =>
+          this.showToastMessage('Error deleting selected users', 'error'),
       });
     });
     this.selectedUserIds = [];
@@ -233,7 +264,7 @@ export class UserListComponent implements OnInit {
     this.editingUser = user;
     this.editData = {
       userName: user.userName,
-      email: user.email
+      email: user.email,
     };
     this.formErrors = {};
     this.showEditModal = true;
@@ -248,15 +279,19 @@ export class UserListComponent implements OnInit {
     const value = this.editData[field].trim();
     if (field === 'userName') {
       if (!value) this.formErrors['userName'] = 'Username is required';
-      else if (value.length < 3) this.formErrors['userName'] = 'Username must be at least 3 characters';
-      else if (value.length > 30) this.formErrors['userName'] = 'Username cannot exceed 30 characters';
+      else if (value.length < 3)
+        this.formErrors['userName'] = 'Username must be at least 3 characters';
+      else if (value.length > 30)
+        this.formErrors['userName'] = 'Username cannot exceed 30 characters';
       else if (!/^[a-zA-Z0-9_ ]+$/.test(value))
-        this.formErrors['userName'] = 'Only letters, numbers, _ and spaces allowed';
+        this.formErrors['userName'] =
+          'Only letters, numbers, _ and spaces allowed';
       else this.formErrors['userName'] = '';
     }
     if (field === 'email') {
       if (!value) this.formErrors['email'] = 'Email is required';
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) this.formErrors['email'] = 'Enter a valid email';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        this.formErrors['email'] = 'Enter a valid email';
       else this.formErrors['email'] = '';
     }
   }
@@ -271,11 +306,13 @@ export class UserListComponent implements OnInit {
     this.userService.updateUser(this.editingUser._id, this.editData).subscribe({
       next: (res) => {
         const updated = res.user;
-        this.users = this.users.map((u) => (u._id === updated._id ? updated : u));
+        this.users = this.users.map((u) =>
+          u._id === updated._id ? updated : u
+        );
         this.closeEditModal();
         this.showToastMessage('User updated successfully');
       },
-      error: () => this.showToastMessage('Failed to update user', 'error')
+      error: () => this.showToastMessage('Failed to update user', 'error'),
     });
   }
 
@@ -286,19 +323,19 @@ export class UserListComponent implements OnInit {
       ID: u.idNumber,
       Verified: u.confirmEmail ? 'Yes' : 'No',
       Role: u.role,
-      Created: new Date(u.createdAt).toLocaleDateString()
+      Created: new Date(u.createdAt).toLocaleDateString(),
     }));
-  
+
     if (!rows.length) {
       this.showNoUsersModal = true;
       return;
     }
-  
+
     const csv = [
       Object.keys(rows[0]).join(','),
-      ...rows.map((row) => Object.values(row).join(','))
+      ...rows.map((row) => Object.values(row).join(',')),
     ].join('\n');
-  
+
     const csvWithBom = '\uFEFF' + csv;
     const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
@@ -306,7 +343,6 @@ export class UserListComponent implements OnInit {
     a.setAttribute('download', 'users.csv');
     a.click();
   }
-  
 
   totalPages(): number {
     return Math.ceil(this.filteredUsers().length / this.pageSize);
@@ -330,7 +366,8 @@ export class UserListComponent implements OnInit {
   }
 
   getProfilePictureUrl(path: string | null | undefined): string {
-    const defaultUrl = 'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
+    const defaultUrl =
+      'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
     if (!path || path.trim() === '' || path === 'undefined') {
       return defaultUrl;
     }
@@ -340,11 +377,13 @@ export class UserListComponent implements OnInit {
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
-    target.src = 'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
+    target.src =
+      'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
   }
 
   extractCurrentAdminId() {
-    const token = localStorage.getItem('UserToken') || sessionStorage.getItem('UserToken');
+    const token =
+      localStorage.getItem('UserToken') || sessionStorage.getItem('UserToken');
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
