@@ -57,42 +57,16 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const token = params['token'];
-      const remember = params['remember'] === 'true';
-      console.log('Query params:', params);
-
-      if (token) {
-        if (remember) {
-          localStorage.setItem('UserToken', token);
-          sessionStorage.removeItem('UserToken');
-        } else {
-          sessionStorage.setItem('UserToken', token);
-          localStorage.removeItem('UserToken');
-        }
-        console.log(
-          'Token stored in localStorage:',
-          localStorage.getItem('UserToken')
-        );
-        console.log(
-          'Token stored in sessionStorage:',
-          sessionStorage.getItem('UserToken')
-        );
-
-        // Clean URL query parameters
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-
-      this.extractCurrentAdminId();
-      this.loadUsers();
-    });
+    this.extractCurrentAdminId();
+    this.loadUsers();
   }
+  
 
   loadUsers() {
     this.loading = true;
     this.userService.getAllUsers().subscribe({
       next: (res) => {
-        this.users = res.users;
+        this.users = res.users.filter((u) => u.isVerified); // Only verified by admin
         this.loading = false;
       },
       error: () => {
@@ -101,6 +75,7 @@ export class UserListComponent implements OnInit {
       },
     });
   }
+  
 
   filteredUsers(): User[] {
     let filtered = [...this.users];
@@ -160,7 +135,7 @@ export class UserListComponent implements OnInit {
       .filter((id) => id !== this.currentAdminId);
     if (checked && filteredIds.length === 0) {
       this.showToastMessage(
-        'No selectable users (you cannot select yourself).',
+        'No selectable users & (you cannot select yourself).',
         'error'
       );
     }
