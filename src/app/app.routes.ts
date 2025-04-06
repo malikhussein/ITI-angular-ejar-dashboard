@@ -24,11 +24,11 @@ export const routes: Routes = [
         (m) => m.NewProductsComponent
       ),
   },
-  {
-    path: 'users',
-    loadComponent: () =>
-      import('./users/all-users.component').then((m) => m.AllUsersComponent),
-  },
+  // {
+  //   path: 'users',
+  //   loadComponent: () =>
+  //     import('./users/all-users.component').then((m) => m.AllUsersComponent),
+  // },
   {
     path: 'products',
     loadComponent: () =>
@@ -49,7 +49,7 @@ export const routes: Routes = [
       ),
   },
   // !important
-  { path: 'customers', component: UserListComponent },
+  { path: 'users', component: UserListComponent },
   {
     path: 'profile',
     loadComponent: () =>
