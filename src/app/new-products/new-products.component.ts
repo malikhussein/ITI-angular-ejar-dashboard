@@ -1,13 +1,15 @@
 import { ProductService } from './../services/product.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator'; // مهم عشان الأحداث
+
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-new-products',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule, FormsModule],
   templateUrl: './new-products.component.html',
   styleUrl: './new-products.component.css',
 })
@@ -21,12 +23,55 @@ export class NewProductsComponent implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 5;
 
+  // تعريف المتغيرات
+  showRejectInput: boolean = false;
+  rejectReason: string = '';
+
+  @Input() product: any;
+
+  confirmProduct() {
+    console.log(this.selectedProduct);
+
+    const updatedData = {
+      ...this.selectedProduct,
+      confirmed: true,
+      confirmMessage: 'Product confirmed by admin',
+    };
+    console.log(updatedData);
+
+    this._ProductService.updateProduct(updatedData).subscribe({
+      next: () => {
+        this.closeModal();
+        this.ngOnInit();
+      },
+      error: (err) => console.error('Error confirming product:', err),
+    });
+  }
+
+  rejectProduct() {
+    if (!this.rejectReason.trim()) return;
+
+    const updatedData = {
+      ...this.selectedProduct,
+      confirmed: false,
+      confirmMessage: this.rejectReason,
+    };
+
+    this._ProductService.updateProduct(updatedData).subscribe({
+      next: () => {
+        alert('Product rejected successfully!');
+        this.showRejectInput = false;
+        this.rejectReason = '';
+      },
+      error: (err) => console.error('Error rejecting product:', err),
+    });
+  }
+
   ngOnInit(): void {
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
         this.users = res.data;
-
-        this.newusers = this.users.filter((user) => user.confirmed === false);
+        this.newusers = this.users.filter((user) => user.confirmed !== true);
         this.updatePaginatedUsers();
       },
     });
@@ -47,14 +92,14 @@ export class NewProductsComponent implements OnInit {
   remove(id: number) {
     this._ProductService.removeProduct(id).subscribe({
       next: (res) => {
-        this.pageIndex = 0; // رجع لأول صفحة بعد الحذف
+        this.pageIndex = 0;
         this.ngOnInit();
       },
     });
   }
 
   move(id: number) {
-    window.open(`http://localhost:5173/product/${id}`, '_blank');
+    window.location.href = `http://localhost:5173/product/${id}`;
   }
   profile(id: number) {
     window.open(`http://localhost:5173/profile/${id}`, '_blank');
@@ -62,5 +107,32 @@ export class NewProductsComponent implements OnInit {
 
   trackById(index: number, item: any) {
     return item.id;
+  }
+  closeModal() {
+    this.selectedProduct = null;
+  }
+
+  selectedProduct: any = null;
+  mainImage: string = '';
+  isEditing: boolean = false;
+  isOwner: boolean = false;
+
+  openProductModal(product: any, currentUserId: string) {
+    this.selectedProduct = product;
+
+    this.mainImage = product.images[0];
+    this.isEditing = false;
+    this.isOwner = product.renterId?._id === currentUserId;
+  }
+
+  closeProductModal() {
+    this.selectedProduct = null;
+    this.mainImage = '';
+    this.isEditing = false;
+  }
+
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    // You can add save logic here when saving
   }
 }

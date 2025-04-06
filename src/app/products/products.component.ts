@@ -1,13 +1,14 @@
 import { ProductService } from './../services/product.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule, FormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -21,6 +22,50 @@ export class AllProductsComponent implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 5;
 
+  // تعريف المتغيرات
+  showRejectInput: boolean = false;
+  rejectReason: string = '';
+
+  @Input() product: any;
+
+  confirmProduct() {
+    console.log('product يييييييييييييييييييي:', this.selectedProduct);
+
+    const updatedData = {
+      ...this.selectedProduct,
+      confirmed: true,
+      confirmMessage: 'Product confirmed by admin',
+    };
+
+    console.log(updatedData);
+
+    this._ProductService.updateProduct(updatedData).subscribe({
+      next: () => {
+        console.log('secsse');
+      },
+      error: (err) => console.error('Error confirming product:', err),
+    });
+  }
+
+  rejectProduct() {
+    if (!this.rejectReason.trim()) return;
+
+    const updatedData = {
+      ...this.selectedProduct,
+      confirmed: false,
+      confirmMessage: this.rejectReason,
+    };
+
+    this._ProductService.updateProduct(updatedData).subscribe({
+      next: () => {
+        alert('Product rejected successfully!');
+        this.showRejectInput = false;
+        this.rejectReason = '';
+      },
+      error: (err) => console.error('Error rejecting product:', err),
+    });
+  }
+
   ngOnInit(): void {
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
@@ -29,6 +74,10 @@ export class AllProductsComponent implements OnInit {
         this.updatePaginatedUsers();
       },
     });
+  }
+
+  closeModal() {
+    this.selectedProduct = null;
   }
 
   onPageChange(event: PageEvent) {
@@ -61,5 +110,29 @@ export class AllProductsComponent implements OnInit {
 
   trackById(index: number, item: any) {
     return item.id;
+  }
+
+  selectedProduct: any = null;
+  mainImage: string = '';
+  isEditing: boolean = false;
+  isOwner: boolean = false;
+
+  openProductModal(product: any, currentUserId: string) {
+    this.selectedProduct = product;
+
+    this.mainImage = product.images[0];
+    this.isEditing = false;
+    this.isOwner = product.renterId?._id === currentUserId;
+  }
+
+  closeProductModal() {
+    this.selectedProduct = null;
+    this.mainImage = '';
+    this.isEditing = false;
+  }
+
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    // You can add save logic here when saving
   }
 }
