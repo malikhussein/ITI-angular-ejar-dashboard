@@ -7,9 +7,15 @@ import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(), provideToastr({
-    progressBar: true,
-  closeButton: true,
-  timeOut: 2000,
-  }), provideAnimations()],
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideHttpClient(),
+    provideToastr({
+      progressBar: true,
+      closeButton: true,
+      timeOut: 2000,
+    }),
+    provideAnimations(),
+  ],
 };
