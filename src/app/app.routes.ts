@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { UserListComponent } from './user-list/user-list.component';
 import { NewUsersComponent } from './new-users/new-users.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 export const routes: Routes = [
@@ -53,6 +54,8 @@ export const routes: Routes = [
   // !important
   { path: 'users', component: UserListComponent },
   { path: 'new-users', component: NewUsersComponent },
+  { path: '**', component: NotFoundComponent },
+
   {
     path: 'profile',
     loadComponent: () =>
