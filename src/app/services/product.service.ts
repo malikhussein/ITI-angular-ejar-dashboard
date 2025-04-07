@@ -10,9 +10,9 @@ export class ProductService {
   constructor(private http:HttpClient) { }
 
 
-getallProducts():Observable<any>{
+getallProducts():Observable<{data:any[]}>{
 
-  return this.http.get('http://localhost:3000/api/product/')
+  return this.http.get<{ data: any[] }>('http://localhost:3000/api/product/')
 }
 removeProduct(id:number):Observable<any>{
 

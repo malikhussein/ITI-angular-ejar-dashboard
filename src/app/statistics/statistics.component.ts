@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { ProcessService } from '../services/process.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { CategoryService } from '../services/category.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   imports: [NgxChartsModule],
@@ -12,6 +14,9 @@ import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 export class StatisticsComponent implements OnInit {
   totalUsers: number = 0;
   totalProcess: number = 0;
+  totalCatgories: number = 0;
+  totalProducts: number = 0;
+  
   //user line chart data
   userLineChartData = [
     {
@@ -57,16 +62,38 @@ export class StatisticsComponent implements OnInit {
     ];
   }
 
+
+  // 
+  advancedPieChartData: any[] = [
+    { name: 'Computers', value: 300 },
+    { name: 'Phones', value: 150 },
+    { name: 'Cameras', value: 500 },
+    { name: 'Headphones', value: 100 },
+  ];
+  // advancedPieView: [number, number] = [1500, 600]; // width, height
+
+  pipeScheme: Color = {
+    name: 'customScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#FFADED', '#562DDD', '#7045FF', '#C768FF', '#B72A67'],
+  };
+  
+
   users: any[] = [];
 
   constructor(
     private userService: UserService,
-    private processService: ProcessService
+    private processService: ProcessService ,
+    private categoryService: CategoryService,
+    private productService : ProductService
   ) {}
 
   ngOnInit(): void {
     this.fetchTotalUsers();
     this.fetchTotalProcess();
+    this.fetchTotalCategories();
+    this.fetchTotalProducts();
   }
 
   fetchTotalUsers(): void {
@@ -84,6 +111,28 @@ export class StatisticsComponent implements OnInit {
         this.totalUsers = res.processes.length;
         this.updateChartData();
       },
+      error: (err) => console.error(err),
+    });
+  }
+
+  fetchTotalCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (res) => {
+        console.log(res);
+        
+        this.totalCatgories = res.length;
+        this.updateChartData();
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  fetchTotalProducts(): void {
+    this.productService.getallProducts().subscribe({
+      next: (res) => {
+        console.log(res);
+        this.totalProducts = res.data.length;
+              },
       error: (err) => console.error(err),
     });
   }
