@@ -10,8 +10,10 @@ export interface User {
   idNumber: string;
   gender: string;
   createdAt: string;
+  // optional bec if user hasn't uploaded profile picture yet
   profilePicture?: string;
 
   idPictureFrontPath: string;
   idPictureBackPath: string;
+   isVerified?: boolean; 
 }

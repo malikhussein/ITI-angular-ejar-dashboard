@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { UserListComponent } from './user-list/user-list.component';
+import { NewUsersComponent } from './new-users/new-users.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: '/statistics', pathMatch: 'full' },
@@ -10,15 +12,13 @@ export const routes: Routes = [
         (m) => m.StatisticsComponent
       ),
   },
-
-  {
-    path: 'new-users',
-    loadComponent: () =>
-      import('./new-users/new-users.component').then(
-        (m) => m.NewUsersComponent
-      ),
-  },
-
+  // {
+  //   path: 'new-users',
+  //   loadComponent: () =>
+  //     import('./new-users/new-users.component').then(
+  //       (m) => m.NewUsersComponent
+  //     ),
+  // },
   {
     path: 'new-products',
     loadComponent: () =>
@@ -51,13 +51,8 @@ export const routes: Routes = [
       ),
   },
   // !important
-  {
-    path: 'users',
-    loadComponent: () =>
-      import('./user-list/user-list.component').then(
-        (m) => m.UserListComponent
-      ),
-  },
+  { path: 'users', component: UserListComponent },
+  { path: 'new-users', component: NewUsersComponent },
   {
     path: 'profile',
     loadComponent: () =>
