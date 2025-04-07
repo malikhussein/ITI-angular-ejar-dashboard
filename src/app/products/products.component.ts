@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule,LoaderComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -20,13 +21,22 @@ export class AllProductsComponent implements OnInit {
 
   pageIndex: number = 0;
   pageSize: number = 5;
-
+// for shared loader
+loading = true;
   ngOnInit(): void {
+    this.loading = true; // show loader initially
+
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
         this.users = res.data;
         this.newusers = this.users.filter((user) => user.confirmed === true);
         this.updatePaginatedUsers();
+        this.loading = false; // hide loader after fetching
+
+      },
+       //  extra 
+       error: () => {
+        this.loading = false; // hide loader on error
       },
     });
   }
