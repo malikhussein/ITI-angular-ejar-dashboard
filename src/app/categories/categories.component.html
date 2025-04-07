@@ -28,7 +28,7 @@
                 @if (showIconDropdown()) {
                   <ul class="dropdown-menu show w-100" style="max-height: 200px; overflow-y: auto;">
                     @for (icon of availableIcons; track icon.value) {
-                      <li>
+                      <li class="select-list">
                         <a class="dropdown-item" (click)="selectIcon(icon.value)">
                           <i [class]="'fas ' + icon.value"></i> {{ icon.label }}
                         </a>
