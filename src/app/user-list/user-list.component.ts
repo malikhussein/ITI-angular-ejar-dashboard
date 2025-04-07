@@ -50,6 +50,8 @@ export class UserListComponent implements OnInit {
   showBulkDeleteConfirm = false;
 
   currentAdminId: string = '';
+  confirmingToggleUserId: string | null = null;
+
 
   constructor(
     private userService: UserService,
@@ -57,42 +59,16 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const token = params['token'];
-      const remember = params['remember'] === 'true';
-      console.log('Query params:', params);
-
-      if (token) {
-        if (remember) {
-          localStorage.setItem('UserToken', token);
-          sessionStorage.removeItem('UserToken');
-        } else {
-          sessionStorage.setItem('UserToken', token);
-          localStorage.removeItem('UserToken');
-        }
-        console.log(
-          'Token stored in localStorage:',
-          localStorage.getItem('UserToken')
-        );
-        console.log(
-          'Token stored in sessionStorage:',
-          sessionStorage.getItem('UserToken')
-        );
-
-        // Clean URL query parameters
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-
-      this.extractCurrentAdminId();
-      this.loadUsers();
-    });
+    this.extractCurrentAdminId();
+    this.loadUsers();
   }
+  
 
   loadUsers() {
     this.loading = true;
     this.userService.getAllUsers().subscribe({
       next: (res) => {
-        this.users = res.users;
+        this.users = res.users.filter((u) => u.isVerified); // Only verified by admin
         this.loading = false;
       },
       error: () => {
@@ -101,6 +77,7 @@ export class UserListComponent implements OnInit {
       },
     });
   }
+  
 
   filteredUsers(): User[] {
     let filtered = [...this.users];
@@ -160,7 +137,7 @@ export class UserListComponent implements OnInit {
       .filter((id) => id !== this.currentAdminId);
     if (checked && filteredIds.length === 0) {
       this.showToastMessage(
-        'No selectable users (you cannot select yourself).',
+        'No selectable users & (you cannot select yourself).',
         'error'
       );
     }
@@ -259,6 +236,40 @@ export class UserListComponent implements OnInit {
   cancelBulkDelete() {
     this.showBulkDeleteConfirm = false;
   }
+  openToggleModal(userId: string) {
+    this.confirmingToggleUserId = userId;
+  }
+  
+  cancelToggleVerification() {
+    this.confirmingToggleUserId = null;
+  }
+  
+  confirmToggleVerification() {
+    const user = this.users.find(u => u._id === this.confirmingToggleUserId);
+    if (!user) return;
+  
+    if (user._id === this.currentAdminId) {
+      this.showToastMessage("You can't ban yourself.", 'error');
+      this.cancelToggleVerification();
+      return;
+    }
+  
+    this.userService.toggleVerification(user._id).subscribe({
+      next: (res) => {
+        user.isVerified = res.isVerified;
+        this.showToastMessage(`User has been ${res.isVerified ? 're-verified' : 'banned'}`, 'success');
+        if (!res.isVerified) {
+          this.users = this.users.filter(u => u._id !== user._id);
+        }
+        this.cancelToggleVerification();
+      },
+      error: () => {
+        this.showToastMessage('Failed to update verification status', 'error');
+        this.cancelToggleVerification();
+      }
+    });
+  }
+  
 
   openEditModal(user: User) {
     this.editingUser = user;

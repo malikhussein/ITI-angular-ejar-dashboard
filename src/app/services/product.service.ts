@@ -3,22 +3,22 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
+  getallProducts(): Observable<any> {
+    return this.http.get('http://localhost:3000/api/product/');
+  }
+  removeProduct(id: number): Observable<any> {
+    return this.http.delete(`http://localhost:3000/api/product/${id}`);
+  }
 
-
-getallProducts():Observable<{data:any[]}>{
-
-  return this.http.get<{ data: any[] }>('http://localhost:3000/api/product/')
-}
-removeProduct(id:number):Observable<any>{
-
-  return this.http.delete(`http://localhost:3000/api/product/${id}`)
-}
-
-
-
+  updateProduct(updatedData: any): Observable<any> {
+    return this.http.post(
+      `http://localhost:3000/api/product/${updatedData._id}`,
+      updatedData
+    );
+  }
 }

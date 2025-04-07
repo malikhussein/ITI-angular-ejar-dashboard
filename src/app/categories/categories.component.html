@@ -6,7 +6,7 @@
 
   <!-- Modal for Adding Category -->
   @if (showAddModal()) {
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -28,7 +28,7 @@
                 @if (showIconDropdown()) {
                   <ul class="dropdown-menu show w-100" style="max-height: 200px; overflow-y: auto;">
                     @for (icon of availableIcons; track icon.value) {
-                      <li>
+                      <li class="select-list">
                         <a class="dropdown-item" (click)="selectIcon(icon.value)">
                           <i [class]="'fas ' + icon.value"></i> {{ icon.label }}
                         </a>
@@ -50,7 +50,7 @@
 
   <!-- Modal for Editing Category -->
   @if (showEditModal()) {
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -94,7 +94,7 @@
 
   <!-- Modal for Delete Confirmation -->
   @if (showDeleteModal()) {
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
           <div class="modal-header">
@@ -114,11 +114,11 @@
   }
 
   <!-- Categories Table -->
-  <div class="card">
+  <div class="card shadow-sm">
     <div class="card-header">All Categories</div>
-    <div class="card-body">
+    <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="custom-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -128,20 +128,44 @@
             </tr>
           </thead>
           <tbody>
+           <!-- Shared loader -->
+           <ng-container>
+                @if (loading()) {
+                  <tr>
+                    <td colspan="4">
+                      <app-loader message="Loading categories..." />
+                    </td>
+                  </tr>
+                }
+              </ng-container>
+              <!-- Shared loader -->
+          <!--  No data message -->
+              <ng-container>
+                @if (!loading() && categories().length === 0) {
+                  <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                      <i class="bi bi-tags fs-4 me-2 text-secondary"></i>
+                      No categories found.
+                    </td>
+                  </tr>
+                }
+              </ng-container>
+            <!--  No data message -->
             @for (category of categories(); track category._id) {
               <tr>
                 <td>#{{ category._id | shortId:8 }}</td>
                 <td>{{ category.name }}</td>
                 <td><i [class]="'fas ' + category.icon"></i></td>
                 <td>
-                  <i class="fas fa-edit fs-5 me-3 edite-icon" (click)="openEditModal(category)" title="Edit"></i>
-                  <i class="fas fa-trash-alt fs-5 delete-icon" (click)="openDeleteModal(category._id)" title="Delete"></i>
+                  <div class="actions">
+                    <button class="btn btn-edit" (click)="openEditModal(category)" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-delete" (click)="openDeleteModal(category._id)" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
                 </td>
-              </tr>
-            }
-            @empty {
-              <tr>
-                <td colspan="4" class="text-center">No categories found</td>
               </tr>
             }
           </tbody>
