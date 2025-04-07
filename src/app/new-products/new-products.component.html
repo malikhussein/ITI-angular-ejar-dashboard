@@ -17,6 +17,29 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Shared loader -->
+          <ng-container>
+            @if (loading) {
+              <tr>
+                <td colspan="10">
+                  <app-loader message="Loading products..."></app-loader>
+                </td>
+              </tr>
+            }
+          </ng-container>
+          <!-- Shared loader -->
+          <!--  No data message -->
+          <ng-container>
+            @if (!loading && paginatedUsers.length === 0) {
+              <tr>
+                <td colspan="10" class="text-center py-5 text-muted">
+                  <i class="bi bi-box-seam fs-4 me-2 text-secondary"></i>
+                  No products found.
+                </td>
+              </tr>
+            }
+          </ng-container>
+          <!--  No data message -->
           <tr *ngFor="let user of paginatedUsers; trackBy: trackById">
             <td>
               <img

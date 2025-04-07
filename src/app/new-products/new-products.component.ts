@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator'; // مهم عشان الأحداث
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-new-products',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule,LoaderComponent],
   templateUrl: './new-products.component.html',
   styleUrl: './new-products.component.css',
 })
@@ -20,14 +21,23 @@ export class NewProductsComponent implements OnInit {
 
   pageIndex: number = 0;
   pageSize: number = 5;
+  // for shared loader
+  loading = true;
 
   ngOnInit(): void {
+    this.loading = true; // show loader initially
+
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
         this.users = res.data;
 
         this.newusers = this.users.filter((user) => user.confirmed === false);
         this.updatePaginatedUsers();
+        this.loading = false; // hide loader after fetching
+      },
+      //  extra 
+      error: () => {
+        this.loading = false; // hide loader on error
       },
     });
   }
