@@ -1,1 +1,139 @@
-<p>all-process works!</p>
+<div class="content-wrapper">
+  <div class="container-fluid p-4">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h5>All Processes</h5>
+      </div>
+      <div class="card-body">
+
+        <!-- Table -->
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Renter ID</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Status</th>
+                  <th>Price</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (process of processes(); track process._id; let i = $index) {
+                  <tr>
+                    <td class="text-truncate">{{ process.productId | shortId }}</td>
+                    <td class="text-truncate">{{ process.renterId | shortId }}</td>
+                    <td>{{ process.startDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ process.endDate | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-pending': process.status === 'pending',
+                        'badge-canceled': process.status === 'canceled',
+                        'badge-in-progress': process.status === 'in_progress',
+                        'badge-finished': process.status === 'finished'
+                      }">
+                        {{ process.status }}
+                      </span>
+                    </td>
+                    <td>{{ process.price }} EGP</td>
+                    <td>{{ process.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn btn-edit" (click)="openEditModal(process)" title="Edit">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-delete" (click)="deleteProcess(process._id)" title="Delete">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+                @empty {
+                  <tr>
+                    <td colspan="8" class="no-data">No processes found</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    @if (showEditModal()) {
+      <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Process</h5>
+              <button type="button" class="btn-close" (click)="closeEditModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Product ID</label>
+                  <input type="text" class="form-control" [(ngModel)]="editProcess()!.productId" disabled />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Renter ID</label>
+                  <input type="text" class="form-control" [(ngModel)]="editProcess()!.renterId" disabled />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Start Date</label>
+                  <input type="date" class="form-control" [(ngModel)]="editProcess()!.startDate" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">End Date</label>
+                  <input type="date" class="form-control" [(ngModel)]="editProcess()!.endDate" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select class="form-control" [(ngModel)]="editProcess()!.status">
+                    <option value="pending">Pending</option>
+                    <option value="canceled">Canceled</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="finished">Finished</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Price</label>
+                  <input type="number" class="form-control" [(ngModel)]="editProcess()!.price" placeholder="Enter price" />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+              <button type="button" class="btn btn-primary" (click)="updateProcess()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Delete Confirmation Modal -->
+    @if (showDeleteModal()) {
+      <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm Deletion</h5>
+              <button type="button" class="btn-close" (click)="closeDeleteModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this process?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+              <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

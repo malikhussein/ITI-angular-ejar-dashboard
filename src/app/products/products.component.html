@@ -4,16 +4,16 @@
       <table class="table table-hover table-sm w-100 text-center">
         <thead class="table-light">
           <tr>
-            <th class="p-2">IMAGE</th>
-            <th class="p-2">NAME</th>
-            <th class="p-2">CATEGORY</th>
-            <th class="p-2">BRAND</th>
-            <th class="p-2">STATUS</th>
-            <th class="p-2">OWNER</th>
-            <th class="p-2">CREATED</th>
-            <th class="p-2">DAILY</th>
-            <th class="p-2">Product ID</th>
-            <th class="p-2">ACTION</th>
+            <th class="p-2" style="color: #9999ac">IMAGE</th>
+            <th class="p-2" style="color: #9999ac">NAME</th>
+            <th class="p-2" style="color: #9999ac">CATEGORY</th>
+            <th class="p-2" style="color: #9999ac">BRAND</th>
+            <th class="p-2" style="color: #9999ac">STATUS</th>
+            <th class="p-2" style="color: #9999ac">OWNER</th>
+            <th class="p-2" style="color: #9999ac">CREATED</th>
+            <th class="p-2" style="color: #9999ac">DAILY</th>
+            <th class="p-2" style="color: #9999ac">Product ID</th>
+            <th class="p-2" style="color: #9999ac">ACTION</th>
           </tr>
         </thead>
         <tbody>
@@ -68,9 +68,13 @@
             <td style="white-space: nowrap">{{ user.id }}</td>
 
             <td style="white-space: nowrap">
-              <button (click)="move(user._id)" class="btn btn-primary mx-2">
-                Details
+              <button
+                class="btn btn-sm btn-outline-info"
+                (click)="openProductModal(user, user._id)"
+              >
+                <i class="bi bi-eye"></i> View
               </button>
+
               <button (click)="remove(user._id)" class="btn btn-danger">
                 <i class="fa-solid fa-trash"></i>
               </button>
@@ -78,6 +82,141 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div
+      class="modal fade show d-block"
+      *ngIf="selectedProduct"
+      tabindex="-1"
+      style="background: rgba(0, 0, 0, 0.5)"
+      id="rejectionModal"
+      aria-hidden="true"
+      data-bs-backdrop="true"
+      data-bs-keyboard="false"
+      (click)="closeModal()"
+    >
+      <div
+        class="modal-dialog modal-xl modal-dialog-centered"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ selectedProduct.name }}</h5>
+            <button
+              type="button"
+              class="btn-close"
+              (click)="closeProductModal()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!-- Product Images -->
+              <div class="col-md-6 text-center">
+                <img
+                  [src]="mainImage"
+                  alt="Product Image"
+                  class="img-fluid"
+                  style="max-height: 400px; object-fit: cover"
+                />
+
+                <div class="d-flex justify-content-center mt-3 flex-wrap">
+                  <img
+                    *ngFor="let img of selectedProduct.images"
+                    [src]="img"
+                    class="rounded border m-2"
+                    (click)="mainImage = img"
+                    [ngStyle]="{
+                      width: '80px',
+                      height: '80px',
+                      objectFit: 'cover',
+                      cursor: 'pointer',
+                      border:
+                        mainImage === img
+                          ? '2px solid blue'
+                          : '2px solid transparent'
+                    }"
+                  />
+                </div>
+              </div>
+
+              <!-- Product Info -->
+              <div class="col-md-6">
+                <h3 class="mb-3 fw-bold">{{ selectedProduct.name }}</h3>
+
+                <div class="mb-2">
+                  <strong>Category:</strong>
+                  <span class="text-muted">{{
+                    selectedProduct.category.name || "N/A"
+                  }}</span>
+                </div>
+
+                <div class="mb-2">
+                  <strong>Owner:</strong>
+                  <span class="text-primary">{{
+                    selectedProduct.renterId.userName
+                  }}</span>
+                </div>
+
+                <div class="mb-2">
+                  <strong>Status:</strong>
+                  <span class="text-muted">{{ selectedProduct.status }}</span>
+                </div>
+
+                <div class="mb-2">
+                  <ng-container
+                    *ngIf="selectedProduct.review?.length > 0; else newBadge"
+                  >
+                    <span class="text-muted">
+                      <i
+                        *ngFor="let star of [1, 2, 3, 4, 5]"
+                        class="fa-star"
+                        [ngClass]="{
+                          'fas text-warning':
+                            star <= selectedProduct.averageRating,
+                          'far text-muted': star > selectedProduct.averageRating
+                        }"
+                      ></i>
+                      ({{ selectedProduct.review.length }})
+                    </span>
+                  </ng-container>
+                  <ng-template #newBadge>
+                    <span class="badge bg-success">NEW</span>
+                  </ng-template>
+                </div>
+
+                <div class="mb-2">
+                  <strong>Description:</strong>
+                  <p>{{ selectedProduct.description }}</p>
+                </div>
+
+                <div class="mb-2">
+                  <strong>Price:</strong>
+                  <h4 class="text-danger">
+                    {{ selectedProduct.daily }} EGP / Day
+                  </h4>
+                </div>
+
+                <!-- Ratings -->
+
+                <!-- Actions -->
+
+                <div *ngIf="showRejectInput" class="mt-2">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter rejection reason..."
+                    [(ngModel)]="rejectReason"
+                  />
+                  <button class="btn btn-danger mt-2" (click)="rejectProduct()">
+                    Submit Rejection
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <mat-paginator
