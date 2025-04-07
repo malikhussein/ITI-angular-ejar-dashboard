@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 import { ToastrService } from 'ngx-toastr';
 import { ShortIdPipe } from '../pipes/short-id.pipe';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShortIdPipe],
+  imports: [CommonModule, FormsModule, ShortIdPipe,LoaderComponent],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css']
 })
@@ -21,6 +22,9 @@ export class AllCategoriesComponent implements OnInit {
   showDeleteModal = signal<boolean>(false);
   categoryToDelete = signal<string | null>(null);
   showIconDropdown = signal<boolean>(false);
+  loading = signal<boolean>(true); // for shared loader
+
+  
 
   availableIcons = [
     { value: 'fa-home', label: 'Home' },
@@ -50,11 +54,17 @@ export class AllCategoriesComponent implements OnInit {
   }
 
   loadCategories() {
+    this.loading.set(true); //  show loader initially
+
     this.categoryService.getCategories().subscribe({
-      next: (data) => this.categories.set(data),
+      next: (data) =>{ 
+        this.categories.set(data)
+       this.loading.set(false);}, // hide loader after fetching
       error: () => {
         this.categories.set([]);
         this.toastr.error('Failed to load categories');
+        this.loading.set(false); //   hide loader on error
+
       }
     });
   }
