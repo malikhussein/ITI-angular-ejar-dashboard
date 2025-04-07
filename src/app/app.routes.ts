@@ -10,6 +10,7 @@ export const routes: Routes = [
         (m) => m.StatisticsComponent
       ),
   },
+
   {
     path: 'new-users',
     loadComponent: () =>
@@ -17,6 +18,7 @@ export const routes: Routes = [
         (m) => m.NewUsersComponent
       ),
   },
+
   {
     path: 'new-products',
     loadComponent: () =>
@@ -49,7 +51,13 @@ export const routes: Routes = [
       ),
   },
   // !important
-  { path: 'users', component: UserListComponent },
+  {
+    path: 'users',
+    loadComponent: () =>
+      import('./user-list/user-list.component').then(
+        (m) => m.UserListComponent
+      ),
+  },
   {
     path: 'profile',
     loadComponent: () =>

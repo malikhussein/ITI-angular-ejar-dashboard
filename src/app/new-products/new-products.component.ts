@@ -23,7 +23,6 @@ export class NewProductsComponent implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 5;
 
-  // تعريف المتغيرات
   showRejectInput: boolean = false;
   rejectReason: string = '';
 
