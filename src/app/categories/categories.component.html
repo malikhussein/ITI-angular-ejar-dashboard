@@ -128,6 +128,29 @@
             </tr>
           </thead>
           <tbody>
+           <!-- Shared loader -->
+           <ng-container>
+                @if (loading()) {
+                  <tr>
+                    <td colspan="4">
+                      <app-loader message="Loading categories..." />
+                    </td>
+                  </tr>
+                }
+              </ng-container>
+              <!-- Shared loader -->
+          <!--  No data message -->
+              <ng-container>
+                @if (!loading() && categories().length === 0) {
+                  <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                      <i class="bi bi-tags fs-4 me-2 text-secondary"></i>
+                      No categories found.
+                    </td>
+                  </tr>
+                }
+              </ng-container>
+            <!--  No data message -->
             @for (category of categories(); track category._id) {
               <tr>
                 <td>#{{ category._id | shortId:8 }}</td>
@@ -143,11 +166,6 @@
                     </button>
                   </div>
                 </td>
-              </tr>
-            }
-            @empty {
-              <tr>
-                <td colspan="4" class="no-data">No categories found</td>
               </tr>
             }
           </tbody>
