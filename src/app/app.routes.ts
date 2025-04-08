@@ -1,66 +1,45 @@
 import { Routes } from '@angular/router';
 import { UserListComponent } from './user-list/user-list.component';
+import { MainLayoutComponentComponent } from './main-layout-component/main-layout-component.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { NewUsersComponent } from './new-users/new-users.component';
+import { NewProductsComponent } from './new-products/new-products.component';
+import { AllProductsComponent } from './products/products.component';
+import { AllProcessComponent } from './process/process.component';
+import { AllCategoriesComponent } from './categories/categories.component';
+import { ProfileComponent } from './profile/profile.component';
+import { AuthComponent } from './auth/auth.component';
+import { LoginComponent } from './Login/login.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/statistics', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard/statistics', pathMatch: 'full' },
+
+  // ✅ AUTH LAYOUT
   {
-    path: 'statistics',
-    loadComponent: () =>
-      import('./statistics/statistics.component').then(
-        (m) => m.StatisticsComponent
-      ),
+    path: '',
+    component: AuthComponent,
+    children: [{ path: 'login', component: LoginComponent }],
   },
 
+  // ✅ DASHBOARD LAYOUT
   {
-    path: 'new-users',
-    loadComponent: () =>
-      import('./new-users/new-users.component').then(
-        (m) => m.NewUsersComponent
-      ),
+    path: 'dashboard',
+    component: MainLayoutComponentComponent,
+    canActivate: [authGuard], // حماية الصفحة
+
+    children: [
+      { path: 'statistics', component: StatisticsComponent },
+      { path: 'new-users', component: NewUsersComponent },
+      { path: 'new-products', component: NewProductsComponent },
+      { path: 'products', component: AllProductsComponent },
+      { path: 'process', component: AllProcessComponent },
+      { path: 'categories', component: AllCategoriesComponent },
+      { path: 'users', component: UserListComponent },
+      { path: 'profile', component: ProfileComponent },
+    ],
   },
 
-  {
-    path: 'new-products',
-    loadComponent: () =>
-      import('./new-products/new-products.component').then(
-        (m) => m.NewProductsComponent
-      ),
-  },
-  // {
-  //   path: 'users',
-  //   loadComponent: () =>
-  //     import('./users/all-users.component').then((m) => m.AllUsersComponent),
-  // },
-  {
-    path: 'products',
-    loadComponent: () =>
-      import('./products/products.component').then(
-        (m) => m.AllProductsComponent
-      ),
-  },
-  {
-    path: 'process',
-    loadComponent: () =>
-      import('./process/process.component').then((m) => m.AllProcessComponent),
-  },
-  {
-    path: 'categories',
-    loadComponent: () =>
-      import('./categories/categories.component').then(
-        (m) => m.AllCategoriesComponent
-      ),
-  },
-  // !important
-  {
-    path: 'users',
-    loadComponent: () =>
-      import('./user-list/user-list.component').then(
-        (m) => m.UserListComponent
-      ),
-  },
-  {
-    path: 'profile',
-    loadComponent: () =>
-      import('./profile/profile.component').then((m) => m.ProfileComponent),
-  },
+  // fallback
+  { path: '**', redirectTo: '/login' },
 ];
