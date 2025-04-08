@@ -61,7 +61,6 @@ export class NewProductsComponent implements OnInit {
 
     this._ProductService.updateProduct(updatedData).subscribe({
       next: () => {
-        alert('Product rejected successfully!');
         this.showRejectInput = false;
         this.rejectReason = '';
       },
@@ -75,11 +74,15 @@ export class NewProductsComponent implements OnInit {
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
         this.users = res.data;
+        console.log(this.users);
+
         this.newusers = this.users.filter((user) => user.confirmed !== true);
+
         this.updatePaginatedUsers();
         this.loading = false; // hide loader after fetching
+        console.log(this.newusers);
       },
-      //  extra 
+      //  extra
       error: () => {
         this.loading = false; // hide loader on error
       },
