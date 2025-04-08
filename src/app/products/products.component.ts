@@ -4,11 +4,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, FormsModule],
+  imports: [CommonModule, MatPaginatorModule, FormsModule,LoaderComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -21,6 +22,9 @@ export class AllProductsComponent implements OnInit {
 
   pageIndex: number = 0;
   pageSize: number = 5;
+
+// for shared loader
+loading = true;
 
   // تعريف المتغيرات
   showRejectInput: boolean = false;
@@ -67,11 +71,19 @@ export class AllProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true; // show loader initially
+
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
         this.users = res.data;
         this.newusers = this.users.filter((user) => user.confirmed === true);
         this.updatePaginatedUsers();
+        this.loading = false; // hide loader after fetching
+
+      },
+       //  extra 
+       error: () => {
+        this.loading = false; // hide loader on error
       },
     });
   }

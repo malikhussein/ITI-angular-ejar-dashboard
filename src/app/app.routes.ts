@@ -12,21 +12,21 @@ import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './Login/login.component';
 import { authGuard } from './auth.guard';
 
+import { NotFoundComponent } from './not-found/not-found.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard/statistics', pathMatch: 'full' },
 
-  // ✅ AUTH LAYOUT
   {
     path: '',
     component: AuthComponent,
     children: [{ path: 'login', component: LoginComponent }],
   },
 
-  // ✅ DASHBOARD LAYOUT
   {
     path: 'dashboard',
     component: MainLayoutComponentComponent,
-    canActivate: [authGuard], // حماية الصفحة
+    canActivate: [authGuard],
 
     children: [
       { path: 'statistics', component: StatisticsComponent },
@@ -40,6 +40,5 @@ export const routes: Routes = [
     ],
   },
 
-  // fallback
-  { path: '**', redirectTo: '/login' },
+  { path: '**', component: NotFoundComponent },
 ];

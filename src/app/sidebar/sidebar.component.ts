@@ -17,13 +17,25 @@ export class SidebarComponent {
   @Output() sidebarToggled = new EventEmitter<boolean>();
 
   menuItems = [
-    { path: '/statistics', label: 'Statistics', icon: 'fas fa-chart-bar' },
-    { path: '/new-users', label: 'New Users', icon: 'fas fa-user-plus' },
-    { path: '/new-products', label: 'New Products', icon: 'fas fa-box-open' },
-    { path: '/users', label: 'Users', icon: 'fas fa-users' },
-    { path: '/products', label: 'Products', icon: 'fas fa-boxes' },
-    { path: '/process', label: 'Processes', icon: 'fas fa-tasks' },
-    { path: '/categories', label: 'Categories', icon: 'fas fa-tags' },
+    {
+      path: '/dashboard/statistics',
+      label: 'Statistics',
+      icon: 'fas fa-chart-bar',
+    },
+    {
+      path: '/dashboard/new-users',
+      label: 'New Users',
+      icon: 'fas fa-user-plus',
+    },
+    {
+      path: '/dashboard/new-products',
+      label: 'New Products',
+      icon: 'fas fa-box-open',
+    },
+    { path: '/dashboard/users', label: 'Users', icon: 'fas fa-users' },
+    { path: '/dashboard/products', label: 'Products', icon: 'fas fa-boxes' },
+    { path: '/dashboard/process', label: 'Processes', icon: 'fas fa-tasks' },
+    { path: '/dashboard/categories', label: 'Categories', icon: 'fas fa-tags' },
   ];
 
   constructor() {

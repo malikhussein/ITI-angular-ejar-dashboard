@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ProcessService {
   private apiUrl = 'http://localhost:3000/api/process';
-  private fallbackToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTJlOGQxYzk0OTBjOTg5NWExYTRlZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0Mzk2NzA2MCwiZXhwIjoxNzQ0MDAzMDYwfQ.Am1VNHdBMUd8f9sMM1nCBkN_IyWqm87dbyUC6crv5s8';
+  private fallbackToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTJlOGQxYzk0OTBjOTg5NWExYTRlZCIsInJvbGUiOiJhZG1pbiIsImlzVmVyaWZpZWQiOmZhbHNlLCJpYXQiOjE3NDQwMzcxNzQsImV4cCI6MTc0NDEwOTE3NH0.V8U_VKHoNu5MdbvApgLDAIeyJiSjyQdom6S5dIBnKCs';
 
   constructor(private http: HttpClient) {}
 

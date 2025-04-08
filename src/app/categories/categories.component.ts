@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../services/category.service';
 import { ToastrService } from 'ngx-toastr';
 import { ShortIdPipe } from '../pipes/short-id.pipe';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShortIdPipe],
+  imports: [CommonModule, FormsModule, ShortIdPipe,LoaderComponent],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css']
 })
@@ -21,18 +22,42 @@ export class AllCategoriesComponent implements OnInit {
   showDeleteModal = signal<boolean>(false);
   categoryToDelete = signal<string | null>(null);
   showIconDropdown = signal<boolean>(false);
+  loading = signal<boolean>(true); // for shared loader
+
+  
 
   availableIcons = [
     { value: 'fa-home', label: 'Home' },
-    { value: 'fa-book', label: 'Book' },
-    { value: 'fa-bicycle', label: 'Bicycle' },
-    { value: 'fa-car', label: 'Car' },
-    { value: 'fa-camera', label: 'Camera' },
-    { value: 'fa-music', label: 'Music' },
-    { value: 'fa-gamepad', label: 'Gamepad' },
+    { value: 'fa-building', label: 'Building' },
     { value: 'fa-laptop', label: 'Laptop' },
+    { value: 'fa-computer', label: 'Computer' },
+    { value: 'fa-desktop', label: 'Desktop' },
+    { value: 'fa-tv', label: 'Tv' },
+    { value: 'fa-camera', label: 'Camera' },
+    { value: 'fa-gamepad', label: 'Gamepad' },
+    { value: 'fa-car', label: 'Car' },
+    { value: 'fa-bicycle', label: 'Bicycle' },
+    { value: 'fa-bed', label: 'Bed' },
+    { value: 'fa-chair', label: 'Chair' },
+    { value: 'fa-shirt', label: 'Shirt' },
+    { value: 'fa-kitchen-set', label: 'Kitchen set' },
+    { value: 'fa-screwdriver-wrench', label: 'Screwdriver wrench' },
+    { value: 'fa-baseball-bat-ball', label: 'Baseball bat' },
+    { value: 'fa-table-tennis-paddle-ball', label: 'Table tennis' },
+    { value: 'fa-handshake', label: 'Handshake' },
+    { value: 'fa-fire', label: 'Fire' },
+    { value: 'fa-icons', label: 'Icons' },
+    { value: 'fa-dumbbell', label: 'Dumbbell' },
     { value: 'fa-mobile-alt', label: 'Mobile' },
+    { value: 'fa-music', label: 'Music' },
     { value: 'fa-headphones', label: 'Headphones' },
+    { value: 'fa-video', label: 'Video' },
+    { value: 'fa-volume-high', label: 'Volume' },
+    { value: 'fa-microphone', label: 'Mic' },
+    { value: 'fa-baby', label: 'Baby' },
+    { value: 'fa-baby-carriage', label: 'Baby carriage' },
+    { value: 'fa-paw', label: 'Paw' },
+    { value: 'fa-book', label: 'Book' },
   ];
 
   constructor(
@@ -50,11 +75,17 @@ export class AllCategoriesComponent implements OnInit {
   }
 
   loadCategories() {
+    this.loading.set(true); //  show loader initially
+
     this.categoryService.getCategories().subscribe({
-      next: (data) => this.categories.set(data),
+      next: (data) =>{ 
+        this.categories.set(data)
+       this.loading.set(false);}, // hide loader after fetching
       error: () => {
         this.categories.set([]);
         this.toastr.error('Failed to load categories');
+        this.loading.set(false); //   hide loader on error
+
       }
     });
   }
