@@ -317,14 +317,13 @@
               <div class="col-md-5 mb-3">
                 <h6>Front</h6>
                 <img
-                  [src]="
-                    'http://localhost:3000/' + selectedUser.idPictureFrontPath
-                  "
+                [src]="selectedUser.idPictureFrontPath"
+
                   class="img-fluid border rounded shadow"
                   style="max-height: 300px; cursor: zoom-in"
                   (click)="
                     openZoomModal(
-                      'http://localhost:3000/' + selectedUser.idPictureFrontPath,
+                      selectedUser.idPictureFrontPath,
                       'Front ID'
                     )
                   "
@@ -333,14 +332,13 @@
               <div class="col-md-5 mb-3">
                 <h6>Back</h6>
                 <img
-                  [src]="
-                    'http://localhost:3000/' + selectedUser.idPictureBackPath
-                  "
+                [src]="selectedUser.idPictureBackPath"
+
                   class="img-fluid border rounded shadow"
                   style="max-height: 300px; cursor: zoom-in"
                   (click)="
                     openZoomModal(
-                      'http://localhost:3000/' + selectedUser.idPictureBackPath,
+                      selectedUser.idPictureBackPath,
                       'Back ID'
                     )
                   "
