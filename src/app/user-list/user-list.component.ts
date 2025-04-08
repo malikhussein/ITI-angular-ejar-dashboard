@@ -394,7 +394,7 @@ export class UserListComponent implements OnInit {
 
   extractCurrentAdminId() {
     const token =
-      localStorage.getItem('UserToken') || sessionStorage.getItem('UserToken');
+      localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
