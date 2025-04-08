@@ -345,14 +345,11 @@ export class NewUsersComponent implements OnInit {
   
 
   getProfilePictureUrl(path: string | null | undefined): string {
-    const defaultUrl =
-      'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
-    if (!path || path.trim() === '' || path === 'undefined') {
-      return defaultUrl;
-    }
-    const cleanedPath = path.replace(/\\/g, '/');
-    return `http://localhost:3000/${cleanedPath}`;
+    const defaultUrl = 'https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg';
+    return path && path !== 'undefined' ? path : defaultUrl;
   }
+  
+  
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
@@ -410,7 +407,7 @@ confirmToggleVerificationById(id: string): void {
 
   extractCurrentAdminId() {
     const token =
-      localStorage.getItem('UserToken') || sessionStorage.getItem('UserToken');
+      localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
