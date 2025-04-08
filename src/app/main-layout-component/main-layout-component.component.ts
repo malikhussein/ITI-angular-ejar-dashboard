@@ -1,26 +1,20 @@
-import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { HeaderComponent } from '../header/header.component';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-main-layout-component',
-  imports: [
-    RouterOutlet,
-    SidebarComponent,
-    HeaderComponent,
-    CommonModule,
-    HttpClientModule,
-  ],
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent, CommonModule, SidebarComponent],
   templateUrl: './main-layout-component.component.html',
-  styleUrl: './main-layout-component.component.css',
+  styleUrls: ['./main-layout-component.component.css'],
 })
 export class MainLayoutComponentComponent {
   isSidebarCollapsed = false;
 
-  toggleSidebar(collapsed: boolean) {
+  onSidebarToggled(collapsed: boolean) {
     this.isSidebarCollapsed = collapsed;
   }
 }
