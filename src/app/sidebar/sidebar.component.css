@@ -9,7 +9,7 @@
   left: 0;
   overflow-x: hidden;
   z-index: 1000;
-  box-shadow: 0 0 10px #ddd;
+  /* box-shadow: 0 0 10px #ddd; */
 }
 
 .sidebar.collapsed {

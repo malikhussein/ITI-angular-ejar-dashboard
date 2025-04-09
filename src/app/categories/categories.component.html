@@ -71,10 +71,10 @@
       <thead class="table-light">
         <tr>
           <th><input type="checkbox" (change)="toggleAllCategories($event)" /></th>
-          <th>ID</th>
-          <th>NAME</th>
           <th>ICON</th>
+          <th>NAME</th>
           <th>CREATED AT</th>
+          <th>ID</th>
           <th>ACTIONS</th>
         </tr>
       </thead>
@@ -98,10 +98,10 @@
                   (change)="toggleCategorySelection(category._id)"
                 />
               </td>
-              <td>#{{ category._id | shortId:8 }}</td>
-              <td>{{ category.name }}</td>
               <td><i [class]="'fas ' + category.icon"></i></td>
+              <td class="text-capitalize">{{ category.name }}</td>
               <td>{{ category.createdAt | date:'d MMM y' }}</td>
+              <td>#{{ category._id | shortId:8 }}</td>
               <td>
                 <button
                   class="btn btn-outline-primary btn-sm me-1"
