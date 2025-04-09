@@ -79,7 +79,7 @@ export class LoginComponent {
           if (userRole === 'admin') {
             localStorage.setItem('authToken', res.token);
 
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/']);
           } else {
             this.apiError = 'You do not have permission to access this page';
           }
