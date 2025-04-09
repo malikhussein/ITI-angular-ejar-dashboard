@@ -15,7 +15,7 @@ import { authGuard } from './auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/dashboard/statistics', pathMatch: 'full' },
+  { path: '', redirectTo: '/statistics', pathMatch: 'full' },
 
   {
     path: '',
@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'dashboard',
+    path: '',
     component: MainLayoutComponentComponent,
     canActivate: [authGuard],
 
@@ -33,7 +33,7 @@ export const routes: Routes = [
       { path: 'new-users', component: NewUsersComponent },
       { path: 'new-products', component: NewProductsComponent },
       { path: 'products', component: AllProductsComponent },
-      { path: 'process', component: AllProcessComponent },
+      { path: 'processes', component: AllProcessComponent },
       { path: 'categories', component: AllCategoriesComponent },
       { path: 'users', component: UserListComponent },
       { path: 'profile', component: ProfileComponent },
