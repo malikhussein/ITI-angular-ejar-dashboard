@@ -69,6 +69,10 @@
   color: #b72a67;
 }
 
+.logout {
+  cursor: pointer;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .sidebar {

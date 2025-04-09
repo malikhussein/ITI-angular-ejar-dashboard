@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, HostListener } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -38,8 +38,9 @@ export class SidebarComponent {
     { path: '/categories', label: 'Categories', icon: 'fas fa-tags' },
   ];
 
-  constructor() {
+  constructor(private router: Router) {
     this.checkScreenSize();
+
   }
 
   @HostListener('window:resize', ['$event'])
@@ -54,5 +55,11 @@ export class SidebarComponent {
 
   private checkScreenSize() {
     this.isSmallScreen = window.innerWidth <= 768;
+  }
+
+
+  logout() {
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/login']);
   }
 }
