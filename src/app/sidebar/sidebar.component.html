@@ -15,16 +15,40 @@
       </div>
     }
   </div>
-  <ul class="nav flex-column">
-    @for (item of menuItems; track item.path) {
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
-          <i [class]="item.icon"></i>
-          @if (!isCollapsed) {
-            <span>{{ item.label }}</span>
-          }
-        </a>
-      </li>
-    }
-  </ul>
+  <div class="menus mt-3">
+    <div class="top">
+      <ul class="nav flex-column">
+        @for (item of menuItems; track item.path) {
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+              <i [class]="item.icon"></i>
+              @if (!isCollapsed) {
+                <span>{{ item.label }}</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+    <div class="down">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:5173/" target="_blank">
+            <i class="fa-solid fa-up-right-from-square"></i>
+            @if (!isCollapsed) {
+              To Website
+            }
+            </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            @if (!isCollapsed) {
+              Logout
+            }
+            </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

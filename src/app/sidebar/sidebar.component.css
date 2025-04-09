@@ -1,14 +1,15 @@
 .sidebar {
   width: 250px;
   height: 100%;
-  background-color: #FFFFFF;
-  color: #8B909A;
+  background-color: #ffffff;
+  color: #8b909a;
   transition: width 0.3s ease;
   position: fixed;
   top: 0;
   left: 0;
   overflow-x: hidden;
   z-index: 1000;
+  box-shadow: 0 0 10px #ddd;
 }
 
 .sidebar.collapsed {
@@ -20,7 +21,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   height: 64px;
 }
 
@@ -44,10 +45,12 @@
 .nav-link {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  color: #8B909A;
+  padding: 10px 15px;
+  color: #8b909a;
   text-decoration: none;
-  transition: background-color 0.3s;
+  margin-bottom: 10px;
+  transition: 0.3s;
+  /* border-radius: 8px; */
 }
 
 .nav-link i {
@@ -57,13 +60,13 @@
 }
 
 .nav-link:hover {
-  background-color: #F3F4F8;
-  color: #B72A67;
+  background-color: #f3f4f8;
+  color: #b72a67;
 }
 
 .nav-link.active {
-  background-color: #F3F4F8;
-  color: #B72A67;
+  background-color: #f3f4f8;
+  color: #b72a67;
 }
 
 /* Responsive Design */
