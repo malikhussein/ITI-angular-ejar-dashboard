@@ -1,17 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
+  constructor(private router: Router) {}
+
   @Input() isSidebarCollapsed = false;
 
   logout() {
-    console.log('Logout clicked');
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/login']);
   }
 }

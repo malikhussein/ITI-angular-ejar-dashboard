@@ -2,15 +2,14 @@
   <div class="right-section">
     <div class="input-group">
       <span class="input-group-text"><i class="fas fa-search"></i></span>
-      <input type="text" class="form-control" placeholder="Search...">
+      <input type="text" class="form-control" placeholder="Search..." />
     </div>
   </div>
   <div class="left-section">
-    <div class="avatar" [routerLink]="['/profile']"><i class="fa-solid fa-user"></i></div>
     @if (!isSidebarCollapsed) {
-      <button class="btn btn-link" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
+    <button class="btn btn-link" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
     }
   </div>
 </header>
