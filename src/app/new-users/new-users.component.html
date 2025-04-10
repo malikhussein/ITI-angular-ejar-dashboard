@@ -6,7 +6,7 @@
       </h4>
     <!-- Floating Admin Tips Button -->
     <button
-      class="btn btn-info btn-sm rounded-circle shadow position-absolute top-0 end-0 mt-2 me-3"
+      class="btn btn-info btn-sm rounded-circle shadow position-absolute top-0 end-0 mt-4 me-4"
       (click)="showTips = !showTips"
       title="Toggle Admin Tips"
       aria-label="Toggle Admin Tips"
@@ -19,7 +19,7 @@
         }"
       ></i>
     </button>
-  
+
     <!-- @if Floating Tips Panel -->
     @if (showTips) {
     <div
@@ -33,11 +33,11 @@
     - Bulk delete invalid users with checkboxes.<br />
     - Preview uploaded ID by clicking <i class="bi bi-eye"></i>.<br />
     - Edit user info with <i class="bi bi-pencil-square"></i> before verifying.<br />
-    
+
     </div>
     }
     <!-- Filters -->
-    <div class="d-flex gap-3 align-items-center mb-3 flex-wrap">
+    <div class="d-flex gap-3 align-items-center mb-3 flex-wrap page-filter">
       <input
         class="form-control w-auto"
         type="text"
@@ -49,23 +49,23 @@
         <option value="verified">Verified Emails</option>
         <option value="unverified">Unverified Emails</option>
       </select>
-  
+
       <select class="form-select w-auto" [(ngModel)]="sortOption">
         <option value="name">Sort by Name</option>
         <option value="newest">Newest First</option>
         <option value="oldest">Oldest First</option>
       </select>
-  
+
       <select class="form-select w-auto" [(ngModel)]="filterRole">
         <option value="">All Roles</option>
         <option value="user">Users Only</option>
         <option value="admin">Admins Only</option>
       </select>
-  
+
       <button class="btn btn-outline-success" (click)="exportToCSV()">
         <i class="bi bi-download"></i> Export CSV
       </button>
-  
+
       <button
         class="btn btn-danger"
         [disabled]="!selectedUserIds.length"
@@ -74,11 +74,11 @@
         <i class="bi bi-trash3"></i> Delete Selected
       </button>
     </div>
-  
+
     <!-- Table -->
     <div class="table-responsive ">
       <table class="table align-middle">
-        <thead class="table-light">
+        <thead>
           <tr>
             <th><input type="checkbox" (change)="toggleAllUsers($event)" /></th>
             <th>NAME</th>
@@ -104,11 +104,11 @@
                 <div class="mt-2 text-muted">Fetching users...</div>
               </td>
             </tr>
-            
+
           } @else if (paginatedUsers().length > 0) { @for (user of
           paginatedUsers(); track user._id) {
-           
-            
+
+
           <tr [class.table-info]="user._id === currentAdminId">
             <td>
               <input
@@ -154,14 +154,14 @@
                   >
                     {{ user.role }}
                   </span>
-  
+
                   @if (user._id === currentAdminId) {
                   <span class="badge bg-warning text-dark">👤 That's you</span>
                   }
                 </div>
               </div>
             </td>
-  
+
             <td>
               {{ user.idNumber }}
               <button
@@ -226,7 +226,7 @@
                   {{ user.isVerified ? 'Verified' : 'Not Verified' }}
                 </span>
               </td>
-              
+
             <td class="text-center">
               <i
                 class="bi"
@@ -242,10 +242,10 @@
                 style="font-size: 1.3rem; margin-left: -2rem"
               ></i>
             </td>
-            
-  
+
+
             <td>{{ user.createdAt | date : "d MMM y" }}</td>
-  
+
             <td>
                 <!-- Edit -->
                 <button
@@ -254,7 +254,7 @@
                 >
                   <i class="bi bi-pencil-square"></i>
                 </button>
-              
+
                 <!-- Delete -->
                 <button
                   class="btn btn-outline-danger btn-sm me-1"
@@ -263,7 +263,7 @@
                 >
                   <i class="bi bi-trash"></i>
                 </button>
-              
+
                 <!-- Verify Toggle -->
                 <button
                   class="btn btn-outline-success btn-sm"
@@ -280,7 +280,7 @@
                   ></i>
                 </button>
               </td>
-              
+
           </tr>
           } } @else {
             <tr>
@@ -289,12 +289,12 @@
                   No matching users found.
                 </td>
               </tr>
-              
+
           }
         </tbody>
       </table>
     </div>
-  
+
     <!-- View ID Modal -->
     <div
       class="modal fade show"
@@ -354,7 +354,7 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Zoom Modal -->
     <div
       class="modal fade show"
@@ -383,7 +383,7 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Delete Confirmation Modal -->
     @if (confirmingDeleteUserId) {
     <div
@@ -430,7 +430,7 @@
           </div>
           <div class="modal-body text-center">
             <p>
-              You are about to 
+              You are about to
               <strong>delete {{ selectedUserIds.length }}</strong> user(s).<br />
               This action is permanent and cannot be undone.
             </p>
@@ -496,16 +496,16 @@
       </div>
     </div>
     <div
-      class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2"
+      class="d-flex justify-content-between align-items-centerflex-wrap gap-2 table-pagination"
     >
       <!-- Showing Count and Page Size -->
       <div
-        class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+        class="d-flex justify-content-between align-items-center flex-wrap gap-2"
       >
         <div class="small text-muted">
           Showing {{ getShowingCount() }} of {{ filteredUsers().length }} users
         </div>
-  
+
         <div class="d-flex align-items-center gap-2">
           <label class="mb-0 small text-muted">Rows per page:</label>
           <select
@@ -519,9 +519,9 @@
           </select>
         </div>
       </div>
-  
+
       <!-- Pagination Buttons -->
-      <div class="d-flex justify-content-end align-items-center flex-wrap gap-2">
+      <div class="d-flex justify-content-end align-items-center flex-wrap gap-2 ">
         <ul class="pagination pagination-sm mb-0">
           <li class="page-item" [class.disabled]="currentPage === 1">
             <button
@@ -532,7 +532,7 @@
               &laquo;
             </button>
           </li>
-  
+
           @for (page of totalPagesArray(); track page) {
           <li class="page-item" [class.active]="page === currentPage">
             <button class="page-link" (click)="currentPage = page">
@@ -540,7 +540,7 @@
             </button>
           </li>
           }
-  
+
           <li class="page-item" [class.disabled]="currentPage === totalPages()">
             <button
               class="page-link"
@@ -608,8 +608,8 @@
           </div>
         </div>
         }
-        
-      
+
+
       <!-- Toast -->
       @if (showToast) {
       <div
@@ -631,4 +631,3 @@
       }
     </div>
   </div>
-  
