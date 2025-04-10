@@ -1,4 +1,5 @@
-<h2 class="mx-2">Dashboard</h2>
+<br><br>
+<h2 class="mx-4 my-4">Dashboard</h2>
 <br />
 
 <div class="row mx-2">
@@ -45,7 +46,7 @@
       <div class="card-body d-flex align-items-center justify-content-between">
         <div class="div">
           <p>Last 7 days</p>
-          <h1>500 Process</h1>
+          <h1>{{totalProcess}} Process</h1>
         </div>
         <div class="div">
           <ngx-charts-line-chart
@@ -101,7 +102,7 @@
   <div class="col-md-6 my-4">
     <div class="card h-100">
       <div class="card-header">
-        <h3>Total Costs</h3>
+        <h3>Total Deals</h3>
       </div>
 
       <div class="card-body">
@@ -128,11 +129,11 @@
 
         <!-- Right Section: Chart -->
         <div class="chart" style="max-width: 500px; width: 100%">
-          <ngx-charts-advanced-pie-chart
+          <!-- <ngx-charts-advanced-pie-chart
             [results]="advancedPieChartData"
             [scheme]="pipeScheme"
             [gradient]="true"
-          ></ngx-charts-advanced-pie-chart>
+          ></ngx-charts-advanced-pie-chart> -->
         </div>
       </div>
     </div>
@@ -141,7 +142,7 @@
   <div class="col-12 my-4 d-flex justify-content-center">
     <div style="width: fit-content; background-color: #f5f7fa">
       <div class="card-body">
-        <ngx-charts-bar-vertical
+        <!-- <ngx-charts-bar-vertical
           [view]="view"
           [scheme]="colorScheme"
           [results]="chartData"
@@ -156,7 +157,7 @@
           xAxisLabel="Metric"
           yAxisLabel="Count"
         >
-        </ngx-charts-bar-vertical>
+        </ngx-charts-bar-vertical> -->
       </div>
     </div>
   </div>

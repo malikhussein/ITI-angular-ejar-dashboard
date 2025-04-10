@@ -16,6 +16,7 @@ export class StatisticsComponent implements OnInit {
   totalProcess: number = 0;
   totalCatgories: number = 0;
   totalProducts: number = 0;
+  totaldeals:number=0
   
   //user line chart data
   userLineChartData = [
@@ -34,7 +35,7 @@ export class StatisticsComponent implements OnInit {
   ];
   userView: [number, number] = [300, 200];
 
-  //chart data
+  //all statics chart data
   // Sample data for the chart
   chartData: any[] = [
     { name: 'Users', value: 800 },
@@ -43,7 +44,6 @@ export class StatisticsComponent implements OnInit {
     { name: 'Categories', value: 100 },
     { name: 'Costs', value: 600 },
   ];
-
   view: [number, number] = [1500, 600]; // width, height
   colorScheme: Color = {
     name: 'customScheme',
@@ -51,6 +51,7 @@ export class StatisticsComponent implements OnInit {
     group: ScaleType.Ordinal,
     domain: ['#FFADED', '#562DDD', '#7045FF', '#C768FF', '#B72A67'],
   };
+
   // Show labels on the pie chart
   updateChartData(): void {
     this.chartData = [
@@ -106,10 +107,11 @@ export class StatisticsComponent implements OnInit {
   }
 
   fetchTotalProcess(): void {
-    this.processService.getTotalProcess().subscribe({
+    this.processService.getAllProcesses().subscribe({
       next: (res) => {
-        this.totalUsers = res.processes.length;
+        this.totalProcess = res.length;
         this.updateChartData();
+        // this.totaldeals=res.data
       },
       error: (err) => console.error(err),
     });
