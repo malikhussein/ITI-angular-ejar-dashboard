@@ -38,6 +38,7 @@ export class NewProductsComponent implements OnInit {
       ...this.selectedProduct,
       confirmed: true,
       confirmMessage: 'Product confirmed by admin',
+      status: 'available',
     };
     console.log(updatedData);
 

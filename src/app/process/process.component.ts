@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProcessService } from '../services/process.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-all-process',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './process.component.html',
   styleUrls: ['./process.component.css'],
 })
@@ -15,11 +15,34 @@ export class AllProcessComponent implements OnInit {
   processes = signal<any[]>([]);
   loading = signal(true);
 
+  searchTerm = '';
+  pageSize = 10;
+  currentPage = 1;
+  filterStatus = '';
+  sortOption = 'productName';
+  selectedProcessIds: string[] = [];
+
   showEditModal = signal(false);
   editProcess = signal<any | null>(null);
+  formErrors: { [key: string]: string } = {
+    startDate: '',
+    endDate: '',
+    status: '',
+    price: '',
+  };
 
-  showDeleteModal = signal(false);
-  processToDelete = signal<string | null>(null);
+  confirmingDeleteProcessId: string | null = null;
+  showBulkDeleteConfirm = false;
+  showNoProcessesModal = false;
+
+  zoomedImageUrl = '';
+  zoomedImageTitle = '';
+
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
+  showToast = false;
+
+  showTips = false;
 
   constructor(
     private processService: ProcessService,
@@ -37,11 +60,57 @@ export class AllProcessComponent implements OnInit {
         this.processes.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
-        this.toastr.error('Failed to load processes');
+      error: () => {
+        this.showToastMessage('Failed to load processes', 'error');
         this.loading.set(false);
       },
     });
+  }
+
+  filteredProcesses(): any[] {
+    let filtered = [...this.processes()];
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (process) =>
+          process.productId.name.toLowerCase().includes(term) ||
+          process.productId.renterId.userName.toLowerCase().includes(term) ||
+          process.status.toLowerCase().includes(term)
+      );
+    }
+    if (this.filterStatus) {
+      filtered = filtered.filter((process) => process.status === this.filterStatus);
+    }
+    if (this.sortOption === 'productName') {
+      filtered.sort((a, b) => a.productId.name.localeCompare(b.productId.name));
+    } else if (this.sortOption === 'newest') {
+      filtered.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } else if (this.sortOption === 'oldest') {
+      filtered.sort(
+        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    }
+    return filtered;
+  }
+
+  paginatedProcesses(): any[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredProcesses().slice(start, start + this.pageSize);
+  }
+
+  toggleProcessSelection(id: string) {
+    this.selectedProcessIds.includes(id)
+      ? (this.selectedProcessIds = this.selectedProcessIds.filter((pid) => pid !== id))
+      : this.selectedProcessIds.push(id);
+  }
+
+  toggleAllProcesses(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.selectedProcessIds = checked
+      ? this.filteredProcesses().map((p) => p._id)
+      : [];
   }
 
   openEditModal(process: any) {
@@ -50,6 +119,7 @@ export class AllProcessComponent implements OnInit {
       startDate: new Date(process.startDate).toISOString().split('T')[0],
       endDate: new Date(process.endDate).toISOString().split('T')[0],
     });
+    this.formErrors = {};
     this.showEditModal.set(true);
   }
 
@@ -58,53 +128,157 @@ export class AllProcessComponent implements OnInit {
     this.editProcess.set(null);
   }
 
+  validateField(field: 'startDate' | 'endDate' | 'status' | 'price') {
+    const process = this.editProcess();
+    if (!process) return;
+    const value = process[field];
+    if (field === 'startDate' || field === 'endDate') {
+      if (!value) this.formErrors[field] = `${field === 'startDate' ? 'Start' : 'End'} Date is required`;
+      else this.formErrors[field] = '';
+    }
+    if (field === 'status') {
+      if (!value) this.formErrors['status'] = 'Status is required';
+      else this.formErrors['status'] = '';
+    }
+    if (field === 'price') {
+      if (!value || value <= 0) this.formErrors['price'] = 'Price must be greater than 0';
+      else this.formErrors['price'] = '';
+    }
+  }
+
   updateProcess() {
     const process = this.editProcess();
-    if (process) {
-      const updatedProcess = {
-        productId: process.productId._id,
-        renterId: process.renterId,
-        startDate: new Date(process.startDate).toISOString(),
-        endDate: new Date(process.endDate).toISOString(),
-        status: process.status,
-        price: process.price,
-      };
-      this.processService.updateProcess(process._id, updatedProcess).subscribe({
-        next: () => {
-          this.loadProcesses();
-          this.closeEditModal();
-          this.toastr.success('Process updated successfully');
-        },
-        error: (err) => {
-          this.toastr.error('Failed to update process');
-        },
-      });
+    if (!process) return;
+    this.validateField('startDate');
+    this.validateField('endDate');
+    this.validateField('status');
+    this.validateField('price');
+    if (Object.values(this.formErrors).some((error) => error)) {
+      this.showToastMessage('Please fix the validation errors', 'error');
+      return;
     }
+    const updatedProcess = {
+      productId: process.productId._id,
+      renterId: process.renterId,
+      startDate: new Date(process.startDate).toISOString(),
+      endDate: new Date(process.endDate).toISOString(),
+      status: process.status,
+      price: process.price,
+    };
+    this.processService.updateProcess(process._id, updatedProcess).subscribe({
+      next: () => {
+        this.loadProcesses();
+        this.closeEditModal();
+        this.showToastMessage('Process updated successfully');
+      },
+      error: () => this.showToastMessage('Failed to update process', 'error'),
+    });
   }
 
-  deleteProcess(id: string) {
-    this.processToDelete.set(id);
-    this.showDeleteModal.set(true);
+  cancelDelete() {
+    this.confirmingDeleteProcessId = null;
   }
 
-  closeDeleteModal() {
-    this.showDeleteModal.set(false);
-    this.processToDelete.set(null);
+  proceedDelete() {
+    if (!this.confirmingDeleteProcessId) return;
+    this.processService.deleteProcess(this.confirmingDeleteProcessId).subscribe({
+      next: () => {
+        this.processes.set(this.processes().filter((p) => p._id !== this.confirmingDeleteProcessId));
+        this.confirmingDeleteProcessId = null;
+        this.showToastMessage('Process deleted successfully');
+      },
+      error: () => {
+        this.confirmingDeleteProcessId = null;
+        this.showToastMessage('Failed to delete process', 'error');
+      },
+    });
   }
 
-  confirmDelete() {
-    const id = this.processToDelete();
-    if (id) {
+  bulkDeleteProcesses() {
+    this.showBulkDeleteConfirm = true;
+  }
+
+  proceedBulkDelete() {
+    const ids = [...this.selectedProcessIds];
+    ids.forEach((id) => {
       this.processService.deleteProcess(id).subscribe({
         next: () => {
-          this.loadProcesses();
-          this.toastr.success('Process deleted successfully');
-          this.closeDeleteModal();
+          this.processes.set(this.processes().filter((p) => !ids.includes(p._id)));
+          this.showToastMessage('Selected processes deleted successfully');
         },
-        error: (err) => {
-          this.toastr.error('Failed to delete process');
-        },
+        error: () => this.showToastMessage('Error deleting selected processes', 'error'),
       });
+    });
+    this.selectedProcessIds = [];
+    this.showBulkDeleteConfirm = false;
+  }
+
+  cancelBulkDelete() {
+    this.showBulkDeleteConfirm = false;
+  }
+
+  exportToCSV() {
+    const rows = this.filteredProcesses().map((p) => ({
+      'Product Name': p.productId.name,
+      'Renter Name': p.productId.renterId.userName,
+      'Start Date': new Date(p.startDate).toLocaleDateString(),
+      'End Date': new Date(p.endDate).toLocaleDateString(),
+      Status: p.status,
+      Price: `${p.price} EGP`,
+      'Created At': new Date(p.createdAt).toLocaleDateString(),
+    }));
+
+    if (!rows.length) {
+      this.showNoProcessesModal = true;
+      return;
     }
+
+    const csv = [
+      Object.keys(rows[0]).join(','),
+      ...rows.map((row) => Object.values(row).join(',')),
+    ].join('\n');
+
+    const csvWithBom = '\uFEFF' + csv;
+    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.setAttribute('download', 'processes.csv');
+    a.click();
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.filteredProcesses().length / this.pageSize);
+  }
+
+  totalPagesArray(): number[] {
+    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  }
+
+  getShowingCount(): number {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return Math.min(end, this.filteredProcesses().length);
+  }
+
+  openZoomModal(src: string, title: string) {
+    this.zoomedImageUrl = src;
+    this.zoomedImageTitle = title;
+  }
+
+  closeZoomModal() {
+    this.zoomedImageUrl = '';
+    this.zoomedImageTitle = '';
+  }
+
+  onImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/placeholder-image.jpg';
+  }
+
+  showToastMessage(message: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+    setTimeout(() => (this.showToast = false), 3000);
   }
 }

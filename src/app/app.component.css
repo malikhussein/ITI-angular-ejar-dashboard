@@ -13,11 +13,7 @@
   margin-left: 60px;
 }
 
-.content {
-  padding: 20px;
-  background-color: #F5F7FA;
-  height: calc(100vh - 64px);
-}
+
 
 @media (max-width: 768px) {
   .main-wrapper {
@@ -27,4 +23,11 @@
   .main-wrapper.shifted {
     margin-left: 60px;
   }
+} */
+
+
+/* .content {
+  padding: 20px;
+  background-color: #F5F7FA;
+  height: calc(100vh - 64px);
 } */
