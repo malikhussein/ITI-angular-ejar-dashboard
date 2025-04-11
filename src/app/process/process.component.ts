@@ -35,8 +35,10 @@ export class AllProcessComponent implements OnInit {
   showBulkDeleteConfirm = false;
   showNoProcessesModal = false;
 
-  zoomedImageUrl = '';
+  zoomedImages: string[] = [];
   zoomedImageTitle = '';
+  mainImage = '';
+  imageErrors: { [key: string]: boolean } = {};
 
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
@@ -68,13 +70,16 @@ export class AllProcessComponent implements OnInit {
   }
 
   filteredProcesses(): any[] {
-    let filtered = [...this.processes()];
+    let filtered = [...this.processes()].filter(
+      (process) => process.productId
+    );
+
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(
         (process) =>
-          process.productId.name.toLowerCase().includes(term) ||
-          process.productId.renterId.userName.toLowerCase().includes(term) ||
+          (process.productId.name?.toLowerCase()?.includes(term) || '') ||
+          (process.productId.renterId?.userName?.toLowerCase()?.includes(term) || '') ||
           process.status.toLowerCase().includes(term)
       );
     }
@@ -82,7 +87,9 @@ export class AllProcessComponent implements OnInit {
       filtered = filtered.filter((process) => process.status === this.filterStatus);
     }
     if (this.sortOption === 'productName') {
-      filtered.sort((a, b) => a.productId.name.localeCompare(b.productId.name));
+      filtered.sort((a, b) =>
+        (a.productId.name || '').localeCompare(b.productId.name || '')
+      );
     } else if (this.sortOption === 'newest') {
       filtered.sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -134,51 +141,49 @@ export class AllProcessComponent implements OnInit {
     const value = process[field];
 
     if (field === 'startDate') {
-        if (!value) {
-            this.formErrors[field] = 'Start Date is required';
+      if (!value) {
+        this.formErrors[field] = 'Start Date is required';
+      } else {
+        const startDate = new Date(value);
+        const now = new Date();
+        if (startDate <= now) {
+          this.formErrors[field] = 'Start Date must be in the future';
         } else {
-            const startDate = new Date(value);
-            const now = new Date();
-            
-            if (startDate <= now) {
-                this.formErrors[field] = 'Start Date must be in the future';
-            } else {
-                this.formErrors[field] = '';
-            }
+          this.formErrors[field] = '';
         }
+      }
     }
 
     if (field === 'endDate') {
-        if (!value) {
-            this.formErrors[field] = 'End Date is required';
+      if (!value) {
+        this.formErrors[field] = 'End Date is required';
+      } else {
+        const endDate = new Date(value);
+        const startDate = process.startDate ? new Date(process.startDate) : null;
+        if (startDate && endDate <= startDate) {
+          this.formErrors[field] = 'End Date must be after Start Date';
         } else {
-            const endDate = new Date(value);
-            const startDate = process.startDate ? new Date(process.startDate) : null;
-
-            if (startDate && endDate <= startDate) {
-                this.formErrors[field] = 'End Date must be after Start Date';
-            } else {
-                this.formErrors[field] = '';
-            }
+          this.formErrors[field] = '';
         }
+      }
     }
 
     if (field === 'status') {
-        if (!value) {
-            this.formErrors['status'] = 'Status is required';
-        } else {
-            this.formErrors['status'] = '';
-        }
+      if (!value) {
+        this.formErrors['status'] = 'Status is required';
+      } else {
+        this.formErrors['status'] = '';
+      }
     }
 
     if (field === 'price') {
-        if (!value || value <= 0) {
-            this.formErrors['price'] = 'Price must be greater than 0';
-        } else {
-            this.formErrors['price'] = '';
-        }
+      if (!value || value <= 0) {
+        this.formErrors['price'] = 'Price must be greater than 0';
+      } else {
+        this.formErrors['price'] = '';
+      }
     }
-}
+  }
 
   updateProcess() {
     const process = this.editProcess();
@@ -253,8 +258,8 @@ export class AllProcessComponent implements OnInit {
 
   exportToCSV() {
     const rows = this.filteredProcesses().map((p) => ({
-      'Product Name': p.productId.name,
-      'Renter Name': p.productId.renterId.userName,
+      'Product Name': p.productId.name || 'N/A',
+      'Renter Name': p.productId.renterId?.userName || 'N/A',
       'Start Date': new Date(p.startDate).toLocaleDateString(),
       'End Date': new Date(p.endDate).toLocaleDateString(),
       Status: p.status,
@@ -294,19 +299,23 @@ export class AllProcessComponent implements OnInit {
     return Math.min(end, this.filteredProcesses().length);
   }
 
-  openZoomModal(src: string, title: string) {
-    this.zoomedImageUrl = src;
+  openZoomModal(images: string[], title: string) {
+    this.zoomedImages = images.length ? images : [''];
     this.zoomedImageTitle = title;
+    this.mainImage = this.zoomedImages[0];
   }
 
   closeZoomModal() {
-    this.zoomedImageUrl = '';
+    this.zoomedImages = [];
     this.zoomedImageTitle = '';
+    this.mainImage = '';
   }
 
-  onImageError(event: Event) {
-    const target = event.target as HTMLImageElement;
-    target.src = 'assets/placeholder-image.jpg';
+  onImageError(event: Event, processId?: string) {
+    if (processId) {
+      this.imageErrors[processId] = true;
+    }
+    (event.target as HTMLImageElement).style.display = 'none';
   }
 
   showToastMessage(message: string, type: 'success' | 'error' = 'success') {
