@@ -6,19 +6,20 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
+  private baseUrl = 'http://localhost:3000/api/product/';
+
   constructor(private http: HttpClient) {}
 
   getallProducts(): Observable<any> {
-    return this.http.get('http://localhost:3000/api/product/');
+    return this.http.get(this.baseUrl);
   }
-  removeProduct(id: number): Observable<any> {
-    return this.http.delete(`http://localhost:3000/api/product/${id}`);
+
+  removeProduct(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}${id}`);
   }
 
   updateProduct(updatedData: any): Observable<any> {
-    return this.http.post(
-      `http://localhost:3000/api/product/${updatedData._id}`,
-      updatedData
-    );
+    const url = `${this.baseUrl}${updatedData._id}`;
+    return this.http.post(url, updatedData);
   }
 }

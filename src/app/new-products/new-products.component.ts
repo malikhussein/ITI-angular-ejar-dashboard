@@ -2,7 +2,7 @@ import { ProductService } from './../services/product.service';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { PageEvent } from '@angular/material/paginator'; // مهم عشان الأحداث
+import { PageEvent } from '@angular/material/paginator';
 import { LoaderComponent } from '../loader/loader.component';
 
 import { FormsModule } from '@angular/forms';
@@ -102,7 +102,7 @@ export class NewProductsComponent implements OnInit {
     this.paginatedUsers = this.newusers.slice(startIndex, endIndex);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     this._ProductService.removeProduct(id).subscribe({
       next: (res) => {
         this.pageIndex = 0;
