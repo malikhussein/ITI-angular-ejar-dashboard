@@ -78,7 +78,6 @@ export class AllCategoriesComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    private toastr: ToastrService
   ) {}
 
   get selectedIconLabelAdd(): string {
@@ -201,8 +200,8 @@ export class AllCategoriesComponent implements OnInit {
     if (field === 'name') {
       if (!category.name || category.name.trim().length < 3)
         this.formErrors['name'] = 'Category name must be at least 3 characters';
-      else if (category.name.trim().length > 40)
-        this.formErrors['name'] = 'Category name cannot exceed 40 characters';
+      else if (category.name.trim().length > 15)
+        this.formErrors['name'] = 'Category name cannot exceed 15 characters';
       else this.formErrors['name'] = '';
     }
     if (field === 'icon') {
