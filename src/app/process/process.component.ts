@@ -132,19 +132,53 @@ export class AllProcessComponent implements OnInit {
     const process = this.editProcess();
     if (!process) return;
     const value = process[field];
-    if (field === 'startDate' || field === 'endDate') {
-      if (!value) this.formErrors[field] = `${field === 'startDate' ? 'Start' : 'End'} Date is required`;
-      else this.formErrors[field] = '';
+
+    if (field === 'startDate') {
+        if (!value) {
+            this.formErrors[field] = 'Start Date is required';
+        } else {
+            const startDate = new Date(value);
+            const now = new Date();
+            
+            if (startDate <= now) {
+                this.formErrors[field] = 'Start Date must be in the future';
+            } else {
+                this.formErrors[field] = '';
+            }
+        }
     }
+
+    if (field === 'endDate') {
+        if (!value) {
+            this.formErrors[field] = 'End Date is required';
+        } else {
+            const endDate = new Date(value);
+            const startDate = process.startDate ? new Date(process.startDate) : null;
+
+            if (startDate && endDate <= startDate) {
+                this.formErrors[field] = 'End Date must be after Start Date';
+            } else {
+                this.formErrors[field] = '';
+            }
+        }
+    }
+
     if (field === 'status') {
-      if (!value) this.formErrors['status'] = 'Status is required';
-      else this.formErrors['status'] = '';
+        if (!value) {
+            this.formErrors['status'] = 'Status is required';
+        } else {
+            this.formErrors['status'] = '';
+        }
     }
+
     if (field === 'price') {
-      if (!value || value <= 0) this.formErrors['price'] = 'Price must be greater than 0';
-      else this.formErrors['price'] = '';
+        if (!value || value <= 0) {
+            this.formErrors['price'] = 'Price must be greater than 0';
+        } else {
+            this.formErrors['price'] = '';
+        }
     }
-  }
+}
 
   updateProcess() {
     const process = this.editProcess();

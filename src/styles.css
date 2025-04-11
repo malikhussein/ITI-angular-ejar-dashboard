@@ -43,3 +43,12 @@ table {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
+
+@media(max-width:768px) {
+
+  .dash-alert {
+    width: 250px !important;
+    font-size: 10px;
+  }
+}

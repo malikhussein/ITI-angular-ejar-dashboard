@@ -289,15 +289,18 @@ export class UserListComponent implements OnInit {
   validateField(field: 'userName' | 'email') {
     const value = this.editData[field].trim();
     if (field === 'userName') {
-      if (!value) this.formErrors['userName'] = 'Username is required';
-      else if (value.length < 3)
+      if (!value) {
+        this.formErrors['userName'] = 'Username is required';
+      } else if (value.length < 3) {
         this.formErrors['userName'] = 'Username must be at least 3 characters';
-      else if (value.length > 30)
+      } else if (value.length > 30) {
         this.formErrors['userName'] = 'Username cannot exceed 30 characters';
-      else if (!/^[a-zA-Z0-9_ ]+$/.test(value))
+      } else if (!/^[a-zA-Z_ ]+$/.test(value)) {
         this.formErrors['userName'] =
-          'Only letters, numbers, _ and spaces allowed';
-      else this.formErrors['userName'] = '';
+          'Username must only contain letters, underscores, and spaces';
+      } else {
+        this.formErrors['userName'] = '';
+      }
     }
     if (field === 'email') {
       if (!value) this.formErrors['email'] = 'Email is required';

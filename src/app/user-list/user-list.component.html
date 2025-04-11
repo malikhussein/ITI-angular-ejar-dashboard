@@ -24,7 +24,7 @@
   <!-- @if Floating Tips Panel -->
   @if (showTips) {
   <div
-    class="alert alert-info position-absolute top-0 end-0 me-5 mt-5 shadow animate__animated animate__fadeIn"
+    class="alert alert-info position-absolute top-0 end-0 me-5 mt-5 shadow animate__animated animate__fadeIn dash-alert"
     style="z-index: 999; width: 400px"
   >
     <strong>🧠 Admin Tips:</strong><br />
@@ -72,7 +72,7 @@
     </button>
 
     <button
-      class="btn btn-danger"
+      class="btn btn-outline-danger"
       [disabled]="!selectedUserIds.length"
       (click)="bulkDeleteUsers()"
     >
