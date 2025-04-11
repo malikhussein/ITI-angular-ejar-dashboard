@@ -13,28 +13,16 @@ import { ProductService } from '../services/product.service';
 })
 export class StatisticsComponent implements OnInit {
   totalUsers: number = 0;
-  totalProcess: number = 0;
   totalCatgories: number = 0;
   totalProducts: number = 0;
   totaldeals:number=0
+  FinishedProcess:any[] = [];
+  PendingProcess:any[] = [];
+  totalFinishedProcess:number=0
+  totalPendingProcess:number=0
+  totalDailyCosts:any[] = [];
+  lastFourProcesses:any[] = [];
   
-  //user line chart data
-  userLineChartData = [
-    {
-      name: 'Users',
-      series: [
-        { name: 'day1', value: 10 },
-        { name: 'day2', value: 20 },
-        { name: 'day3', value: 25 },
-        { name: 'day4', value: 40 },
-        { name: 'day5', value: 35 },
-        { name: 'day6', value: 50 },
-        { name: 'day7', value: 55 },
-      ],
-    },
-  ];
-  userView: [number, number] = [300, 200];
-
   //all statics chart data
   // Sample data for the chart
   chartData: any[] = [
@@ -56,15 +44,17 @@ export class StatisticsComponent implements OnInit {
   updateChartData(): void {
     this.chartData = [
       { name: 'Users', value: this.totalUsers },
-      { name: 'Processes', value: this.totalProcess },
-      { name: 'Products', value: 500 },
-      { name: 'Categories', value: 8 },
-      { name: 'Costs', value: 1200 },
+      { name: 'Processes', value: this.totalFinishedProcess },
+      { name: 'Products', value: this.totalProducts },
+      { name: 'Categories', value: this.totalCatgories },
+      // { name: 'Deals', value: this.totaldeals }, // optional if you fetch totaldeals
     ];
   }
 
+lineView: [number, number] = [400, 200];
+  
 
-  // 
+
   advancedPieChartData: any[] = [
     { name: 'Computers', value: 300 },
     { name: 'Phones', value: 150 },
@@ -100,7 +90,7 @@ export class StatisticsComponent implements OnInit {
   fetchTotalUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (res) => {
-        (this.totalUsers = res.users.length), this.updateChartData();
+        this.totalUsers = res.users.length
       },
       error: (err) => console.error(err),
     });
@@ -109,9 +99,20 @@ export class StatisticsComponent implements OnInit {
   fetchTotalProcess(): void {
     this.processService.getAllProcesses().subscribe({
       next: (res) => {
-        this.totalProcess = res.length;
-        this.updateChartData();
-        // this.totaldeals=res.data
+        console.log(res);
+        
+        this.FinishedProcess = res.filter((item)=>item.status=="finished");
+        this.PendingProcess= res.filter((item)=>item.status=="pending")
+        this.totalDailyCosts = res.reduce((total, item) => total + item.price, 0);
+        console.log(this.totalDailyCosts);
+        this.lastFourProcesses = res.slice(-4).reverse();
+        console.log(this.lastFourProcesses);
+        
+          
+        
+        this.totalFinishedProcess=this.FinishedProcess.length
+        this.totalPendingProcess=this.PendingProcess.length
+
       },
       error: (err) => console.error(err),
     });
@@ -121,9 +122,8 @@ export class StatisticsComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (res) => {
         console.log(res);
-        
+
         this.totalCatgories = res.length;
-        this.updateChartData();
       },
       error: (err) => console.error(err),
     });
@@ -134,8 +134,27 @@ export class StatisticsComponent implements OnInit {
       next: (res) => {
         console.log(res);
         this.totalProducts = res.data.length;
+
               },
       error: (err) => console.error(err),
     });
   }
-}
+
+  generateMessage(proc: any): string {
+
+      switch (proc.status) {
+        case 'finished':
+          return `Process for "${proc.productId?.name}" has completed under ${proc.renterId?.userName || 'Uncategorized'}.`;
+        case 'canceled':
+          return `Process "${proc.productId?.name}" was canceled from ${proc.renterId?.userName || 'Uncategorized'}.`;
+        case 'pending':
+          return `New process "${proc.productId?.name}" was pending from ${proc.renterId?.userName || 'Uncategorized'}.`;
+          case 'in progress':
+            return `New process "${proc.productId?.name}" was in progress from ${proc.renterId?.userName || 'Uncategorized'}.`;
+  
+        default:
+          return `Process "${proc.productId?.name}" status is unknown.`;
+      }  
+  
+    }
+  }
