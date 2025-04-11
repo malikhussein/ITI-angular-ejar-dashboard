@@ -48,7 +48,6 @@ export class AllProcessComponent implements OnInit {
 
   constructor(
     private processService: ProcessService,
-    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -193,7 +192,7 @@ export class AllProcessComponent implements OnInit {
     this.validateField('status');
     this.validateField('price');
     if (Object.values(this.formErrors).some((error) => error)) {
-      this.showToastMessage('Please fix the validation errors', 'error');
+      this.showToastMessage('Please check fields', 'error');
       return;
     }
     const updatedProcess = {

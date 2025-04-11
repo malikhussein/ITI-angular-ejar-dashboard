@@ -164,7 +164,7 @@ export class AllProductsComponent implements OnInit {
     this.validateField('price');
 
     if (Object.keys(this.formErrors).length) {
-      this.showToastMessage('Please fix the validation errors', 'error');
+      this.showToastMessage('Please check fields', 'error');
       return;
     }
 
@@ -178,7 +178,7 @@ export class AllProductsComponent implements OnInit {
       images: product.images,
     };
 
-    console.log('Updating product with data:', updatedData);
+    // console.log('Updating product with data:', updatedData);
 
     this.productService.updateProduct(updatedData).subscribe({
       next: (response) => {
