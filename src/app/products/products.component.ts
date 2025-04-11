@@ -3,11 +3,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
+import { ShortIdPipe } from '../pipes/short-id.pipe';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, ShortIdPipe],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
 })

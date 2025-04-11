@@ -101,7 +101,7 @@
               <td><i [class]="'fas ' + category.icon"></i></td>
               <td class="text-capitalize">{{ category.name }}</td>
               <td>{{ category.createdAt | date:'d MMM y' }}</td>
-              <td>#{{ category._id | shortId:8 }}</td>
+              <td>{{ category._id | shortId:8 }}</td>
               <td>
                 <button
                   class="btn btn-outline-primary btn-sm me-1"
