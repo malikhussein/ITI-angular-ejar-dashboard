@@ -24,7 +24,7 @@
   <!-- Floating Tips Panel -->
   @if (showTips) {
     <div
-      class="alert alert-info position-absolute top-0 end-0 me-5 mt-5 shadow animate__animated animate__fadeIn"
+      class="alert alert-info position-absolute top-0 end-0 me-5 mt-5 shadow animate__animated animate__fadeIn dash-alert"
       style="z-index: 999; width: 500px"
     >
       <strong>🧠 Admin Tips for Managing Categories:</strong><br />
@@ -50,14 +50,14 @@
       <option value="newest">Newest First</option>
       <option value="oldest">Oldest First</option>
     </select>
-    <button class="btn btn-primary" (click)="openAddModal()">
+    <button class="btn btn-outline-primary" (click)="openAddModal()">
       <i class="bi bi-plus-circle"></i> Add New Category
     </button>
     <button class="btn btn-outline-success" (click)="exportToCSV()">
       <i class="bi bi-download"></i> Export CSV
     </button>
     <button
-      class="btn btn-danger"
+      class="btn btn-outline-danger"
       [disabled]="!selectedCategoryIds.length"
       (click)="bulkDeleteCategories()"
     >
