@@ -52,21 +52,17 @@ export class NewProductsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.loadCategories();
     this.loadProducts();
   }
 
-  loadCategories() {
-    this.categoryService.getCategories().subscribe({
-      next: (data) => this.categories.set(data),
-      error: () => this.showToastMessage('Failed to load categories', 'error'),
-    });
-  }
+
 
   loadProducts() {
     this.loading.set(true);
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
+        console.log(res);
+        
         this.products.set(res.data);
         this.loading.set(false);
       },

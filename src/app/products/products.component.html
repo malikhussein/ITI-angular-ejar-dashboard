@@ -121,8 +121,8 @@
               (error)="onImageError($event)"
             />
           </td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.category.name | titlecase }}</td>
+          <td>{{ product?.name }}</td>
+          <td>{{ product?.category?.name | titlecase }}</td>
           <td>
             <span
               class="badge rounded-pill px-3 py-2 fw-semibold"
@@ -136,7 +136,7 @@
             </span>
           </td>
           <td  >
-            {{ product.renterId.userName }}
+            {{ product?.renterId?.userName }}
             <i (click)="profile(product.renterId._id)" class="  fa-solid fa-up-right-from-square"></i>
 
           </td>
@@ -275,7 +275,7 @@
             >
               <option value="">Select a category</option>
               @for (cat of categories(); track cat._id) {
-              <option [value]="cat._id">{{ cat.name }}</option>
+              <option [value]="cat._id">{{ cat?.name }}</option>
               }
             </select>
             @if (formErrors['category']) {
