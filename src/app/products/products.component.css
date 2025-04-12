@@ -49,12 +49,6 @@
 
 
 
-.clickable {
-  color: blue;
-  text-decoration: underline;
-}
-
-.clickable:hover {
-  color: darkblue;
+.fa-solid {
   cursor: pointer;
 }

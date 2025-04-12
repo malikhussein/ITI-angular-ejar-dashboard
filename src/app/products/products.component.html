@@ -135,8 +135,10 @@
               {{ product.status | titlecase }}
             </span>
           </td>
-          <td class="clickable" (click)="profile(product.renterId._id)">
+          <td  >
             {{ product.renterId.userName }}
+            <i (click)="profile(product.renterId._id)" class="  fa-solid fa-up-right-from-square"></i>
+
           </td>
      
           <td>{{ product.createdAt | date : "d MMM y" }}</td>

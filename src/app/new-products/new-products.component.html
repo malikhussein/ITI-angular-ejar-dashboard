@@ -1,6 +1,4 @@
-<div class="p-4 bg-gray-100 min-h-screen">
-  <div class="container bg-white p-4 rounded-lg shadow">
-    <div class="p-4 position-relative">
+<div class="p-4 position-relative">
       <!-- Heading -->
       <h4 class="fw-semibold mb-3">
         <i class="bi bi-box-seam me-2"></i>
@@ -137,8 +135,9 @@
                   {{ product.status | titlecase }}
                 </span>
               </td>
-              <td class="clickable" (click)="profile(product.renterId._id)">
+              <td  >
                 {{ product.renterId.userName }}
+                <i (click)="profile(product.renterId._id)" class="fa-solid fa-up-right-from-square"></i>
               </td>
               <td>{{ product.createdAt | date : "d MMM y" }}</td>
               <td>{{ product.daily }} EGP</td>
@@ -219,109 +218,7 @@
       }
     
       <!-- Edit Modal -->
-      @if (showEditModal()) {
-      <div
-        class="modal fade show"
-        tabindex="-1"
-        style="display: block; background: rgba(0, 0, 0, 0.5)"
-      >
-        <div
-          class="modal-dialog modal-lg modal-dialog-centered"
-          (click)="$event.stopPropagation()"
-        >
-          <div class="modal-content shadow-lg">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Product</h5>
-              <button
-                type="button"
-                class="btn-close"
-                (click)="closeEditModal()"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label fw-bold">Product Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="editProduct()!.name"
-                  placeholder="Enter product name"
-                  (blur)="validateField('name')"
-                />
-                @if (formErrors['name']) {
-                <small class="text-danger">{{ formErrors["name"] }}</small>
-                }
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Description</label>
-                <textarea
-                  class="form-control"
-                  [(ngModel)]="editProduct()!.description"
-                  placeholder="Enter product description"
-                  rows="3"
-                  (blur)="validateField('description')"
-                ></textarea>
-                @if (formErrors['description']) {
-                <small class="text-danger">{{ formErrors["description"] }}</small>
-                }
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Category</label>
-                <select
-                  class="form-control"
-                  [(ngModel)]="editProduct()!.category._id"
-                  (blur)="validateField('category')"
-                >
-                  <option value="">Select a category</option>
-                  @for (cat of categories(); track cat._id) {
-                  <option [value]="cat._id">{{ cat.name }}</option>
-                  }
-                </select>
-                @if (formErrors['category']) {
-                <small class="text-danger">{{ formErrors["category"] }}</small>
-                }
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Status</label>
-                <select
-                  class="form-control"
-                  [(ngModel)]="editProduct()!.status"
-                  (blur)="validateField('status')"
-                >
-                  <option value="available">Available</option>
-                  <option value="rented">Rented</option>
-                  <option value="unavailable">Unavailable</option>
-                </select>
-                @if (formErrors['status']) {
-                <small class="text-danger">{{ formErrors["status"] }}</small>
-                }
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Daily Price (EGP)</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [(ngModel)]="editProduct()!.daily"
-                  placeholder="Enter daily price"
-                  (blur)="validateField('price')"
-                />
-                @if (formErrors['price']) {
-                <small class="text-danger">{{ formErrors["price"] }}</small>
-                }
-              </div>
-            </div>
-            <div class="modal-footer bg-light">
-              <button class="btn btn-secondary" (click)="closeEditModal()">
-                Cancel
-              </button>
-              <button class="btn btn-primary" (click)="updateProduct()">
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      }
+
     
       <!-- Delete Confirmation Modal -->
       @if (confirmingDeleteProductId) {
@@ -560,22 +457,22 @@
                 <h3 class="mb-3 fw-bold">{{ selectedProduct.name }}</h3>
 
                 <div class="mb-2">
-                  <strong>Category:</strong>
-                  <span class="text-muted">{{
+                  <strong>Category: </strong>
+                  <span class="text-muted text-capitalize">{{
                     selectedProduct.category.name || "N/A"
                   }}</span>
                 </div>
 
                 <div class="mb-2">
-                  <strong>Owner:</strong>
-                  <span class="text-primary">{{
+                  <strong>Owner: </strong>
+                  <span class="text-primary text-capitalize">{{
                     selectedProduct?.renterId?.userName
                   }}</span>
                 </div>
 
                 <div class="mb-2">
-                  <strong>Status:</strong>
-                  <span class="text-muted">{{ selectedProduct.status }}</span>
+                  <strong>Status: </strong>
+                  <span class="text-muted text-capitalize">{{ selectedProduct.status }}</span>
                 </div>
 
                 <div class="mb-2">
@@ -601,13 +498,13 @@
                 </div>
 
                 <div class="mb-2">
-                  <strong>Description:</strong>
-                  <p>{{ selectedProduct.description }}</p>
+                  <strong>Description: </strong>
+                  <p class="text-capitalize">{{ selectedProduct.description }}</p>
                 </div>
 
                 <div class="mb-2">
-                  <strong>Price:</strong>
-                  <h4 class="text-danger">
+                  <strong>Price: </strong>
+                  <h4 class="text-danger text-capitalize">
                     {{ selectedProduct.daily }} EGP / Day
                   </h4>
                 </div>
