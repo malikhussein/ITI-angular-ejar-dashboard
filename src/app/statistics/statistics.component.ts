@@ -114,7 +114,7 @@ export class StatisticsComponent implements OnInit {
   fetchTotalProcess(): void {
     this.processService.getAllProcesses().subscribe({
       next: (res) => {
-        console.log(res);
+       
 
         this.FinishedProcess = res.filter((item) => item.status == 'finished');
         this.PendingProcess = res.filter((item) => item.status == 'pending');
@@ -128,9 +128,9 @@ export class StatisticsComponent implements OnInit {
           0
         );
 
-        console.log(this.totalDailyCosts);
+       
         this.lastFourProcesses = res.slice(-4).reverse();
-        console.log(this.lastFourProcesses);
+       
 
         this.totalFinishedProcess = this.FinishedProcess.length;
         this.totalPendingProcess = this.PendingProcess.length;
@@ -166,7 +166,7 @@ export class StatisticsComponent implements OnInit {
           this.totalProducts = res.data.length;
 
           // Debugging logs to ensure correct filtering
-          console.log('Products:', res.data);
+         
 
           this.ComputerCatgory = res.data.filter(
             (item: any) => item.category?.name === 'computers'

@@ -179,11 +179,9 @@ export class NewProductsComponent implements OnInit {
       images: product.images,
     };
 
-    // console.log('Updating product with data:', updatedData);
 
     this._ProductService.updateProduct(updatedData).subscribe({
       next: (response) => {
-        console.log('Update response:', response);
         this.loadProducts();
         this.closeEditModal();
         this.showToastMessage('Product updated successfully');
@@ -310,7 +308,7 @@ export class NewProductsComponent implements OnInit {
   @Input() product: any;
 
   confirmProduct() {
-    console.log(this.selectedProduct);
+   
 
     const updatedData = {
       ...this.selectedProduct,
@@ -318,7 +316,7 @@ export class NewProductsComponent implements OnInit {
       confirmMessage: 'Product confirmed by admin',
       status: 'available',
     };
-    console.log(updatedData);
+   
 
     this._ProductService.updateProduct(updatedData).subscribe({
       next: () => {

@@ -182,11 +182,11 @@ export class AllProductsComponent implements OnInit {
       images: product.images,
     };
 
-    // console.log('Updating product with data:', updatedData);
+
 
     this.productService.updateProduct(updatedData).subscribe({
       next: (response) => {
-        console.log('Update response:', response);
+       
         this.loadProducts();
         this.closeEditModal();
         this.showToastMessage('Product updated successfully');
