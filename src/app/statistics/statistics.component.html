@@ -1,104 +1,164 @@
-<br /><br />
-<h2 class="mx-4 my-4">Dashboard</h2>
-<br />
+<h2 class="page-title">Dashboard</h2>
 
-<div class="row mx-2">
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">
-        <h3>
-          <i style="color: #ffaded" class="fas fa-user-plus"></i>
-          <span class="mx-3">Total Users</span>
-        </h3>
-      </div>
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div>
+<div class="container-fluid px-4">
+  <div class="row g-4">
+    <!-- Total Users -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <i class="fas fa-user-plus me-3" style="color: #ffaded"></i>Total
+            Users
+          </h3>
+        </div>
+        <div
+          class="card-body d-flex align-items-center justify-content-between"
+        >
           <h1>{{ totalUsers }} Users</h1>
         </div>
-        <div></div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <h3>
-          <i style="color: #ffaded" class="fas fa-tasks"></i>
-          <span class="mx-3">Total Costs</span>
-        </h3>
-      </div>
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div class="div">
-          <h1>{{totalDailyCosts}} Costs</h1>
+    <!-- Total Costs -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <i class="fas fa-tasks me-3" style="color: #ffaded"></i>Total Costs
+          </h3>
         </div>
-        <div class="div"></div>
+        <div
+          class="card-body d-flex align-items-center justify-content-between"
+        >
+          <h1>{{ totalDailyCosts }} L.E</h1>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <h3>
-          <i style="color: #ffaded" class="fas fa-boxes"></i>
-          <span class="mx-3">Total Products</span>
-        </h3>
-      </div>
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div class="div">
+    <!-- Total Products -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <i class="fas fa-boxes me-3" style="color: #ffaded"></i>Total
+            Products
+          </h3>
+        </div>
+        <div
+          class="card-body d-flex align-items-center justify-content-between"
+        >
           <h1>{{ totalProducts }} Products</h1>
         </div>
-        <div class="div"></div>
       </div>
     </div>
-  </div>
 
-  <!-- Total Process Card -->
-  <div class="col-md-6">
-    <div class="card h-100">
-      <div class="card-header">
-        <h3>Total Process</h3>
-      </div>
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div class="pendingProcess">
-          <h5>Pending Process :</h5>
-          <h1>{{ totalPendingProcess }} Process</h1>
+    <!-- Total Process -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Total Process</h3>
         </div>
-        <div class="finishedm mx-5">
-          <h5>Finished Process :</h5>
-          <h1>{{ totalFinishedProcess }} Process</h1>
+        <div class="card-body d-flex justify-content-between">
+          <div class="pendingProcess">
+            <h5>Pending Process:</h5>
+            <h1>{{ totalPendingProcess }} Process</h1>
+          </div>
+          
+          <div class=" mt-4">
+            <div class="Processc rounded-4 mb-4 mx-5">
+              <h4 class="fw-bold mb-3">Processes Summary</h4>
+              <ngx-charts-pie-chart
+                [view]="lineView"
+                [scheme]="pipeScheme"
+                [results]="processPieChartData"
+                [legend]="true"
+                [labels]="true"
+                [doughnut]="true"
+                [gradient]="false"
+                [animations]="true"
+              >
+              </ngx-charts-pie-chart>
+              
+            </div>
+          </div>
+          <div class="finishedm">
+            <h5>Finished Process:</h5>
+            <h1>{{ totalFinishedProcess }} Process</h1>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Total Categories Card -->
-  <div class="col-md-6">
-    <div class="card h-100">
-      <div class="card-header">
-        <h3>Total Categories</h3>
-      </div>
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div>
+    <!-- Total Categories -->
+    <div class="col-md-6">
+      <div class="card ">
+        <div class="card-header">
+          <h3>Total Categories</h3>
+        </div>
+        <div class="card-body d-flex flex-column">
           <h1>{{ totalCatgories }} Categories</h1>
-        </div>
-        <div class="chart" style="width: 100%; max-width: 350px; height: 250px">
-          <ngx-charts-advanced-pie-chart
-            [results]="advancedPieChartData"
-            [scheme]="pipeScheme"
-            [gradient]="true"
-          ></ngx-charts-advanced-pie-chart>
+          <div class="chart  ">
+              <ngx-charts-advanced-pie-chart
+                [results]="advancedPieChartData"
+                [scheme]="pipeScheme"
+                [gradient]="true"
+              ></ngx-charts-advanced-pie-chart>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- bottom part -->
-  <div class="row mt-4">
+  <!-- Bottom Section -->
+  <div class="row g-4 mt-2">
     <!-- Left Column -->
     <div class="col-md-6 d-flex flex-column gap-4">
-      <!-- Inbox Card -->
+
+           <!-- Recent Activity -->
+           <div class="card activity-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h5>Recent Activity</h5>
+                <a href="#" class="text-primary"  [routerLink]="'/products'" routerLinkActive="active">View all</a>
+              </div>
+              <ul class="list-unstyled mt-3">
+                <li *ngFor="let proc of lastFourProcesses" class="activity-item">
+                  <span
+                    class="circle"
+                    [ngClass]="{
+                      'text-success': proc.status === 'finished',
+                      'text-danger': proc.status === 'canceled',
+                      'text-secondary': proc.status === 'pending',
+                      'text-primary': proc.status === 'in progress'
+                    }"
+                  >
+                    <i
+                      [ngClass]="{
+                        'bi bi-check-circle-fill': proc.status === 'finished',
+                        'bi bi-x-circle-fill': proc.status === 'canceled',
+                        'bi bi-circle': proc.status === 'pending',
+                        'bi bi-circle-fill': proc.status === 'in progress'
+                      }"
+                    ></i>
+                  </span>
+                  <p>{{ generateMessage(proc) }}</p>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'urgent': proc.status === 'canceled',
+                      'new': proc.status === 'finished',
+                      'info': proc.status === 'pending',
+                      'in-progress': proc.status === 'in progress'
+                    }"
+                                    >
+                    {{ proc.status?.toUpperCase() }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+      <!-- Inbox -->
       <div class="card inbox-card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
@@ -120,81 +180,25 @@
           </div>
         </div>
       </div>
-
-      <!-- Recent Activity Card -->
-      <div class="card activity-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <h5>Recent Activity</h5>
-            <a href="#" class="text-primary">View all</a>
-          </div>
-          <ul class="list-unstyled mt-3">
-            <li *ngFor="let proc of lastFourProcesses" class="activity-item">
-              <!-- Icon span -->
-              <span 
-                class="circle"
-                [ngClass]="{
-                  'text-success': proc.status === 'finished',
-                  'text-danger': proc.status === 'canceled',
-                  'text-secondary': proc.status === 'pending',
-                  '.text-primary': proc.status === 'inprogress'
-
-                }"
-              >
-                <i 
-                  [ngClass]="{
-                    'bi bi-check-circle-fill': proc.status === 'finished',
-                    'bi bi-x-circle-fill': proc.status === 'canceled',
-                    'bi bi-circle': proc.status === 'pending',
-                    'bi bi-circle-fill': proc.status === 'in progress'
-
-                  }"
-                ></i>
-              </span>
-      
-              <!-- Message -->
-              <p class="d-inline ms-2 mb-0">{{ generateMessage(proc) }}</p>
-      
-              <!-- Badge -->
-              <span 
-                class="badge ms-2"
-                [ngClass]="{
-                  'urgent': proc.status === 'canceled',
-                  'new': proc.status === 'pending',
-                  'success': proc.status === 'finished',
-                  'in-progress': proc.status === 'finished'
-
-                }"
-              >
-                {{ proc.status?.toUpperCase() }}
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-            
+      <br>
     </div>
 
     <!-- Right Column -->
     <div class="col-md-6">
       <div class="card trend-card">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-              <h5>Today's trends</h5>
-              <small class="text-muted">30 Sept 2021</small>
+              <h5>Overal statics</h5>
+              <small class="text-muted">{{ today | date:'dd MMM yyyy' }}</small>
             </div>
             <div class="trend-tabs">
               <span class="active">Today</span>
-              <span>Yesterday</span>
             </div>
           </div>
-          <div
-            class="chart-section"
-            style="padding: 2rem; width: 100%; height: 350px"
-          >
+          <div class="chart-section">
             <ngx-charts-bar-vertical
-              [view]="[700, 350]"
+              [view]="[720, 350]"
               [scheme]="colorScheme"
               [results]="chartData"
               [xAxis]="true"
