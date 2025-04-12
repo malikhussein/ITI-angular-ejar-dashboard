@@ -4,9 +4,10 @@ import { ProcessService } from '../services/process.service';
 import { Color, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { CategoryService } from '../services/category.service';
 import { ProductService } from '../services/product.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  imports: [NgxChartsModule],
+  imports: [NgxChartsModule,RouterModule],
   selector: 'app-dashboard',
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.css'],
@@ -15,16 +16,24 @@ export class StatisticsComponent implements OnInit {
   totalUsers: number = 0;
   totalCatgories: number = 0;
   totalProducts: number = 0;
-  totaldeals:number=0
-  FinishedProcess:any[] = [];
-  PendingProcess:any[] = [];
-  totalFinishedProcess:number=0
-  totalPendingProcess:number=0
-  totalDailyCosts:any[] = [];
-  lastFourProcesses:any[] = [];
-  
-  //all statics chart data
-  // Sample data for the chart
+  totaldeals: number = 0;
+  FinishedProcess: any[] = [];
+  PendingProcess: any[] = [];
+  totalFinishedProcess: number = 0;
+  totalPendingProcess: number = 0;
+  totalDailyCosts: any[] = [];
+  lastFourProcesses: any[] = [];
+  users: any[] = [];
+  ComputerCatgory: number = 0;
+  PhonesCatgory: number = 0;
+  CamerasCatgory: number = 0;
+  HeadphonesCatgory: number = 0;
+  processPieChartData: any[] = [];
+  advancedPieChartData: any[] = [];
+
+  today: Date = new Date();
+
+  // All statics chart data
   chartData: any[] = [
     { name: 'Users', value: 800 },
     { name: 'Processes', value: 150 },
@@ -32,6 +41,7 @@ export class StatisticsComponent implements OnInit {
     { name: 'Categories', value: 100 },
     { name: 'Costs', value: 600 },
   ];
+
   view: [number, number] = [1500, 600]; // width, height
   colorScheme: Color = {
     name: 'customScheme',
@@ -40,28 +50,27 @@ export class StatisticsComponent implements OnInit {
     domain: ['#FFADED', '#562DDD', '#7045FF', '#C768FF', '#B72A67'],
   };
 
-  // Show labels on the pie chart
   updateChartData(): void {
+    // Ensure all values are numbers and not NaN
     this.chartData = [
-      { name: 'Users', value: this.totalUsers },
-      { name: 'Processes', value: this.totalFinishedProcess },
-      { name: 'Products', value: this.totalProducts },
-      { name: 'Categories', value: this.totalCatgories },
-      // { name: 'Deals', value: this.totaldeals }, // optional if you fetch totaldeals
+      { name: 'Users', value: isNaN(this.totalUsers) ? 0 : this.totalUsers },
+      { name: 'Processes', value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess },
+      { name: 'Products', value: isNaN(this.totalProducts) ? 0 : this.totalProducts },
+      { name: 'Categories', value: isNaN(this.totalCatgories) ? 0 : this.totalCatgories },
     ];
   }
 
-lineView: [number, number] = [400, 200];
-  
+  lineView: [number, number] = [400, 200];
 
-
-  advancedPieChartData: any[] = [
-    { name: 'Computers', value: 300 },
-    { name: 'Phones', value: 150 },
-    { name: 'Cameras', value: 500 },
-    { name: 'Headphones', value: 100 },
-  ];
-  // advancedPieView: [number, number] = [1500, 600]; // width, height
+  updateAdvancedPieChartData(): void {
+    // Ensure all category values are numbers and not NaN
+    this.advancedPieChartData = [
+      { name: 'Computers', value: isNaN(this.ComputerCatgory) ? 0 : this.ComputerCatgory },
+      { name: 'Phones', value: isNaN(this.PhonesCatgory) ? 0 : this.PhonesCatgory },
+      { name: 'Cameras', value: isNaN(this.CamerasCatgory) ? 0 : this.CamerasCatgory },
+      { name: 'Headphones', value: isNaN(this.HeadphonesCatgory) ? 0 : this.HeadphonesCatgory },
+    ];
+  }
 
   pipeScheme: Color = {
     name: 'customScheme',
@@ -69,15 +78,20 @@ lineView: [number, number] = [400, 200];
     group: ScaleType.Ordinal,
     domain: ['#FFADED', '#562DDD', '#7045FF', '#C768FF', '#B72A67'],
   };
-  
 
-  users: any[] = [];
+  updateProcessPieChartData(): void {
+    // Ensure that values are numbers
+    this.processPieChartData = [
+      { name: 'Pending', value: isNaN(this.totalPendingProcess) ? 0 : this.totalPendingProcess },
+      { name: 'Finished', value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess },
+    ];
+  }
 
   constructor(
     private userService: UserService,
-    private processService: ProcessService ,
+    private processService: ProcessService,
     private categoryService: CategoryService,
-    private productService : ProductService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -90,7 +104,8 @@ lineView: [number, number] = [400, 200];
   fetchTotalUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (res) => {
-        this.totalUsers = res.users.length
+        this.totalUsers = res.users.length;
+        this.updateChartData();
       },
       error: (err) => console.error(err),
     });
@@ -100,19 +115,28 @@ lineView: [number, number] = [400, 200];
     this.processService.getAllProcesses().subscribe({
       next: (res) => {
         console.log(res);
-        
-        this.FinishedProcess = res.filter((item)=>item.status=="finished");
-        this.PendingProcess= res.filter((item)=>item.status=="pending")
-        this.totalDailyCosts = res.reduce((total, item) => total + item.price, 0);
+
+        this.FinishedProcess = res.filter((item) => item.status == 'finished');
+        this.PendingProcess = res.filter((item) => item.status == 'pending');
+
+        // Ensure we are calculating the costs and process numbers correctly
+        this.totalDailyCosts = res.filter(
+          (item) => item.status == 'in progress' || item.status == 'finished'
+        );
+        this.totalDailyCosts = this.totalDailyCosts.reduce(
+          (total, item) => total + item.price,
+          0
+        );
+
         console.log(this.totalDailyCosts);
         this.lastFourProcesses = res.slice(-4).reverse();
         console.log(this.lastFourProcesses);
-        
-          
-        
-        this.totalFinishedProcess=this.FinishedProcess.length
-        this.totalPendingProcess=this.PendingProcess.length
 
+        this.totalFinishedProcess = this.FinishedProcess.length;
+        this.totalPendingProcess = this.PendingProcess.length;
+
+        this.updateChartData();
+        this.updateProcessPieChartData();
       },
       error: (err) => console.error(err),
     });
@@ -121,40 +145,72 @@ lineView: [number, number] = [400, 200];
   fetchTotalCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (res) => {
-        console.log(res);
-
-        this.totalCatgories = res.length;
+        // Ensure the categories data is valid
+        if (Array.isArray(res) && res.length > 0) {
+          this.totalCatgories = res.length;
+          this.updateChartData();
+        } else {
+          console.error('Categories data is invalid or empty.');
+        }
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
     });
   }
 
   fetchTotalProducts(): void {
     this.productService.getallProducts().subscribe({
       next: (res) => {
-        console.log(res);
-        this.totalProducts = res.data.length;
+        if (res.data && Array.isArray(res.data)) {
+          this.totalProducts = res.data.length;
 
-              },
-      error: (err) => console.error(err),
+          // Debugging logs to ensure correct filtering
+          console.log('Products:', res.data);
+
+          this.ComputerCatgory = res.data.filter(
+            (item: any) => item.category?.name === 'computers'
+          ).length;
+          this.PhonesCatgory = res.data.filter(
+            (item: any) => item.category?.name === 'phones'
+          ).length;
+          this.CamerasCatgory = res.data.filter(
+            (item: any) => item.category?.name === 'cameras'
+          ).length;
+          this.HeadphonesCatgory = res.data.filter(
+            (item: any) => item.category?.name === 'headphones'
+          ).length;
+
+          this.updateAdvancedPieChartData();
+          this.updateChartData();
+        } else {
+          console.error('Products data is invalid:', res);
+        }
+      },
+      error: (err) => console.error('Error fetching products:', err),
     });
   }
 
   generateMessage(proc: any): string {
-
-      switch (proc.status) {
-        case 'finished':
-          return `Process for "${proc.productId?.name}" has completed under ${proc.renterId?.userName || 'Uncategorized'}.`;
-        case 'canceled':
-          return `Process "${proc.productId?.name}" was canceled from ${proc.renterId?.userName || 'Uncategorized'}.`;
-        case 'pending':
-          return `New process "${proc.productId?.name}" was pending from ${proc.renterId?.userName || 'Uncategorized'}.`;
-          case 'in progress':
-            return `New process "${proc.productId?.name}" was in progress from ${proc.renterId?.userName || 'Uncategorized'}.`;
-  
-        default:
-          return `Process "${proc.productId?.name}" status is unknown.`;
-      }  
-  
+    switch (proc.status) {
+      case 'finished':
+        return `Process for "${proc.productId?.name}" has completed under ${
+          proc.renterId?.userName || 'Uncategorized'
+        }`;
+      case 'canceled':
+        return `Process "${proc.productId?.name}" was canceled from ${
+          proc.renterId?.userName || 'Uncategorized'
+        }`;
+      case 'pending':
+        return `New process "${proc.productId?.name}" was pending from ${
+          proc.renterId?.userName || 'Uncategorized'
+        }`;
+      case 'in progress':
+        return `New process "${proc.productId?.name}" was in progress from ${
+          proc.renterId?.userName || 'Uncategorized'
+        }`;
+      default:
+        return `Process "${proc.productId?.name}" status is unknown.`;
     }
   }
+}

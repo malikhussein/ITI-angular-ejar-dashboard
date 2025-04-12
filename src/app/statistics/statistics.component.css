@@ -1,154 +1,159 @@
-  h1 {
-    font-weight: 700;
-    color: #562DDD;
-    font-size: 2.5rem;
-    margin-top: 1.3rem;
+body {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+h1 {
+  color: #562DDD;
+  font-weight: 700; /* or 400 */
+}
+
+
+.page-title {
+  margin: 2rem 0 1rem 1rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  border-left: 6px solid #562DDD;
+  padding-left: 1rem;
+}
+
+.card {
+  box-shadow: 0 8px 20px rgba(86, 45, 221, 0.1);
+  border: none;
+  border-radius: 16px;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(86, 45, 221, 0.2);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #562DDD, #7E5AF7);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 1rem 1.25rem;
+  color: white;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+ .chart {
+  max-width: 100%;
+  width: 100%;
+  height: 240px;
+} 
+
+.pendingProcess, .finishedm {
+  flex: 1;
+  padding: 0 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.activity-item .circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-item p {
+  margin: 0;
+  flex-grow: 1;
+  font-weight: 500;
+  color: #343a40;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge.urgent {
+  background-color: #FFD166;
+  color: #000;
+}
+
+.badge.new {
+  background-color: #06d656;
+  color: #fff;
+}
+
+.badge.info {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+
+.badge.in-progress {
+  background-color: #0dcaf0;
+  color: black;
+}
+
+.trend-tabs {
+  display: flex;
+  gap: 1rem;
+}
+
+.trend-tabs span {
+  font-weight: 600;
+  cursor: pointer;
+  color: #888;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.trend-tabs span.active {
+  color: #3A86FF;
+  border-color: #3A86FF;
+}
+
+.chart-section {
+  padding: 1rem;
+  width: 100%;
+  height: 350px;
+}
+h4{
+  text-align: center;
+}
+.Processc{
+
+}
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+    margin: 1rem;
   }
-  
-  h2 {
-    font-weight: 700;
-    color: #343a40;
-    font-size: 2.2rem;
-  }
-  
-  h3 {
-    font-weight: 600;
-    color: #ffffff;
-    margin-left: 0.7rem;
-    font-size: 1.25rem;
-  }
-  
-   .card {
-    box-shadow: 0 8px 20px rgba(86, 45, 221, 0.1);
-    height: 100%;
-    border: none;
-    border-radius: 16px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-    overflow: hidden;
-    
-  }
-  
-  .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(86, 45, 221, 0.2);
-  }
-  
-  .card-header {
-    background: linear-gradient(135deg, #562DDD, #7E5AF7);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-    padding: 1.2rem 1rem;
-  }
-  
+
   .card-body {
-    padding: 1.5rem;
-  }
-  
-   .row {
-    row-gap: 2rem;
-  }
-  
-  .chart {
-    max-width: 500px;
-    width: 100%;
-    height: 300px; 
-  }
-  
-  
-  .pendingProcess, .finishedm {
-    flex: 1;
-    padding: 0 1rem;
-  }
-  
-  h2.mx-4.my-4 {
-    margin-top: 2rem;
-    font-size: 2.5rem;
-    border-left: 6px solid #562DDD;
-    padding-left: 1rem;
-  }
-  
-  @media (max-width: 768px) {
-    .card h1 {
-      font-size: 1.8rem;
-    }
-  
-    h2.mx-4.my-4 {
-      font-size: 2rem;
-      margin: 1rem 1rem;
-    }
-  
-    .card-body {
-      padding: 1rem;
-    }
-  
-    .finishedm, .pendingProcess {
-      padding: 0.5rem;
-    }
-
-    
+    padding: 1rem;
   }
 
-  .inbox-card, .activity-card, .trend-card {
-    min-height: 230px;
-  }
-  
   .activity-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    font-weight: 500;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
   }
-  
-  .activity-item .circle {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 0.6rem;
-  }
-  
-  .circle.blue { background-color: #3A86FF; }
-  .circle.red { background-color: #EF233C; }
-  .circle.gray { background-color: #ADB5BD; }
-  
+
   .badge {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 12px;
-    font-weight: 600;
+    align-self: flex-start;
   }
-  
-  .in-progress {           /* For in-progress */
-    background-color: #0dcaf0; /* Bootstrap info blue */
-    color: black; }
-  
-  .badge.urgent {
-    background-color: #FFD166;
-    color: #000;
-  }
-  
-  .badge.new {
-    background-color: #06D6A0;
-    color: #fff;
-  }
-  
-  .badge.default {
-    background-color: #CED4DA;
-    color: #333;
-  }
-  
-  .trend-tabs span {
-    font-weight: 600;
-    margin-left: 1rem;
-    cursor: pointer;
-    color: #888;
-  }
-  
-  .trend-tabs span.active {
-    color: #3A86FF;
-    border-bottom: 2px solid #3A86FF;
-  }
-  
-  
+}
