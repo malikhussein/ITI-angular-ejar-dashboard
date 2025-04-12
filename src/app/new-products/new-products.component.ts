@@ -8,6 +8,7 @@ import { CategoryService } from '../services/category.service';
 import { ShortIdPipe } from '../pipes/short-id.pipe';
 
 import { FormsModule } from '@angular/forms';
+import { Product } from '../models/product.interface';
 
 @Component({
   selector: 'app-new-products',
@@ -61,9 +62,9 @@ export class NewProductsComponent implements OnInit {
     this.loading.set(true);
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
-        console.log(res);
+        const confirmed = res.data.filter((item :Product) => item.confirmed === false);
+        this.products.set(confirmed);
         
-        this.products.set(res.data);
         this.loading.set(false);
       },
       error: () => {
