@@ -135,9 +135,10 @@
               {{ product.status | titlecase }}
             </span>
           </td>
-          <td>
+          <td class="clickable" (click)="profile(product.renterId._id)">
             {{ product.renterId.userName }}
           </td>
+     
           <td>{{ product.createdAt | date : "d MMM y" }}</td>
           <td>{{ product.daily }} EGP</td>
           <td>{{ product._id | shortId }}</td>
@@ -146,7 +147,7 @@
               class="btn btn-outline-primary btn-sm me-1"
               (click)="openEditModal(product)"
             >
-              <i class="bi bi-pencil-square"></i>
+            <i class="fa-solid fa-pen-to-square"></i>
             </button>
             <button
               class="btn btn-outline-danger btn-sm me-1"

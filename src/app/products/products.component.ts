@@ -295,4 +295,7 @@ export class AllProductsComponent implements OnInit {
     this.showToast = true;
     setTimeout(() => (this.showToast = false), 3000);
   }
+  profile(id: number) {
+    window.open(`http://localhost:5173/profile/${id}`, '_blank');
+  }
 }
