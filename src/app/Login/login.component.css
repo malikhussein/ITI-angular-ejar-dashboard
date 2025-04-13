@@ -47,3 +47,22 @@ button[type="submit"] {
 .dang {
   color: red;
 }
+
+input[_ngcontent-ng-c975759461] {
+  width: 2%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+
