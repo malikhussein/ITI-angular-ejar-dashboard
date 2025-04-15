@@ -7,7 +7,7 @@ import { ProductService } from '../services/product.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  imports: [NgxChartsModule,RouterModule],
+  imports: [NgxChartsModule, RouterModule],
   selector: 'app-dashboard',
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.css'],
@@ -60,28 +60,38 @@ export class StatisticsComponent implements OnInit {
     // Ensure all values are numbers and not NaN
     this.chartData = [
       { name: 'Users', value: isNaN(this.totalUsers) ? 0 : this.totalUsers },
-      { name: 'Processes', value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess },
-      { name: 'Products', value: isNaN(this.totalProducts) ? 0 : this.totalProducts },
-      { name: 'Categories', value: isNaN(this.totalCatgories) ? 0 : this.totalCatgories },
+      {
+        name: 'Processes',
+        value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess,
+      },
+      {
+        name: 'Products',
+        value: isNaN(this.totalProducts) ? 0 : this.totalProducts,
+      },
+      {
+        name: 'Categories',
+        value: isNaN(this.totalCatgories) ? 0 : this.totalCatgories,
+      },
     ];
   }
 
   lineView: [number, number] = [400, 200];
 
   updateAdvancedPieChartData(): void {
+    this.advancedPieChartData = []; // clear existing data first
     // Ensure all category values are numbers and not NaN
     this.advancedPieChartData = [
-      { name: 'Computers', value: isNaN(this.ComputerCatgory) ? 0 : this.ComputerCatgory },
-      { name: 'Cameras', value: isNaN(this.CamerasCatgory) ? 0 : this.CamerasCatgory },
-      { name: 'clothes', value: isNaN(this.clothes) ? 0 : this.clothes },
-      { name: 'gaming', value: isNaN(this.	tools) ? 0 : this.	gaming },
-      { name: 'furniture', value: isNaN(this.furniture) ? 0 : this.	furniture },
-      { name: 'gem', value: isNaN(this.gem) ? 0 : this.gem },
-      { name: 'kitchen', value: isNaN(this.	kitchen) ? 0 : this.	kitchen },
-      { name: 'tools', value: isNaN(this.	tools) ? 0 : this.	tools },
-
+      { name: 'Computers', value: this.ComputerCatgory },
+      { name: 'Cameras', value: this.CamerasCatgory },
+      { name: 'Headphones', value: this.HeadphonesCatgory },
+      { name: 'clothes', value: this.clothes },
+      { name: 'gaming', value: this.gaming },
+      { name: 'furniture', value: this.furniture },
+      { name: 'gem', value: this.gem },
+      { name: 'tools', value: this.tools },
     ];
   }
+
 
   pipeScheme: Color = {
     name: 'customScheme',
@@ -93,8 +103,14 @@ export class StatisticsComponent implements OnInit {
   updateProcessPieChartData(): void {
     // Ensure that values are numbers
     this.processPieChartData = [
-      { name: 'Pending', value: isNaN(this.totalPendingProcess) ? 0 : this.totalPendingProcess },
-      { name: 'Finished', value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess },
+      {
+        name: 'Pending',
+        value: isNaN(this.totalPendingProcess) ? 0 : this.totalPendingProcess,
+      },
+      {
+        name: 'Finished',
+        value: isNaN(this.totalFinishedProcess) ? 0 : this.totalFinishedProcess,
+      },
     ];
   }
 
@@ -125,8 +141,6 @@ export class StatisticsComponent implements OnInit {
   fetchTotalProcess(): void {
     this.processService.getAllProcesses().subscribe({
       next: (res) => {
-       
-
         this.FinishedProcess = res.filter((item) => item.status == 'finished');
         this.PendingProcess = res.filter((item) => item.status == 'pending');
 
@@ -139,9 +153,7 @@ export class StatisticsComponent implements OnInit {
           0
         );
 
-       
         this.lastFourProcesses = res.slice(-4).reverse();
-       
 
         this.totalFinishedProcess = this.FinishedProcess.length;
         this.totalPendingProcess = this.PendingProcess.length;
@@ -177,7 +189,6 @@ export class StatisticsComponent implements OnInit {
           this.totalProducts = res.data.length;
 
           // Debugging logs to ensure correct filtering
-         
 
           this.ComputerCatgory = res.data.filter(
             (item: any) => item.category?.name === 'computers'
@@ -191,21 +202,23 @@ export class StatisticsComponent implements OnInit {
 
           this.clothes = res.data.filter(
             (item: any) => item.category?.name === 'clothes'
-          ).length; 
-            this.furniture = res.data.filter(
+          ).length;
+          this.furniture = res.data.filter(
             (item: any) => item.category?.name === 'furniture'
-          ).length; 
-            this.gaming = res.data.filter(
+          ).length;
+          this.gaming = res.data.filter(
             (item: any) => item.category?.name === 'gaming'
           ).length;
-             this.gem = res.data.filter(
-            (item: any) => item.category?.name === 'gem	'
+          this.gem = res.data.filter(
+            (item: any) => item.category?.name === 'gem'
           ).length;
           this.tools = res.data.filter(
             (item: any) => item.category?.name === 'tools'
           ).length;
 
           this.updateAdvancedPieChartData();
+          console.log(this.advancedPieChartData)
+
           this.updateChartData();
         } else {
           console.error('Products data is invalid:', res);

@@ -54,11 +54,11 @@
 
     <!-- Total Process -->
     <div class="col-md-6">
-      <div class="card h-100">
+      <div class="card">
         <div class="card-header">
           <h3>Total Process</h3>
         </div>
-        <div class="card-body d-flex flex-wrap justify-content-around align-items-start">
+        <div class="card-body d-flex justify-content-between">
           <div class="pendingProcess">
             <h5>Pending Process:</h5>
             <h1>{{ totalPendingProcess }} Process</h1>
@@ -66,9 +66,9 @@
           
           <div class="Processc rounded-4 mb-4 d-flex flex-column align-items-center justify-content-center" style="width: 100%;">
             <h4 class="fw-bold mb-3 text-center">Processes Summary</h4>
-            <div class="chart" style="width: 100%; max-width: 350px; margin-right: 50px; display: flex;justify-content: center;">
+            <div class="chart" style="width: 100%; max-width: 350px; display: flex; justify-content: center;">
               <ngx-charts-pie-chart
-                [view]="[500, 350]"
+                 [view]="[500, 350]"
                 [scheme]="pipeScheme"
                 [results]="processPieChartData"
                 [legend]="true"
@@ -82,7 +82,7 @@
               </ngx-charts-pie-chart>
             </div>
           </div>
-                      
+          
           <div class="finishedm">
             <h5>Finished Process:</h5>
             <h1>{{ totalFinishedProcess }} Process</h1>
@@ -93,8 +93,8 @@
 
     <!-- Total Categories -->
     <div class="col-md-6">
-      <div class="card h-100">
-            <div class="card-header">
+      <div class="card h-100">    
+        <div class="card-header">
           <h3>Total Categories</h3>
         </div>
         <div class="card-body d-flex flex-column">
@@ -216,4 +216,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
