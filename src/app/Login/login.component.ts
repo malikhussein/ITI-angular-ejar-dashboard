@@ -13,7 +13,13 @@ import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule ,FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    FormsModule,
+  ],
 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -23,7 +29,6 @@ export class LoginComponent {
   apiError: string | null = null;
   isLoading: boolean = false;
   rememberMe: boolean = false;
-
 
   constructor(
     private _FormBuilder: FormBuilder,
@@ -51,19 +56,19 @@ export class LoginComponent {
     if (!value || value.trim() === '') {
       return { required: true };
     }
-  
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^01[0-9]{9}$/;
-  
+
     if (emailRegex.test(value) || phoneRegex.test(value)) {
       return null; // Valid
     }
-  
+
     return {
       invalidIdentifier: true,
     };
   }
-  
+
   onSubmit() {
     if (this.loginForm.invalid) return;
 
@@ -88,11 +93,11 @@ export class LoginComponent {
           if (userRole === 'admin') {
             if (this.rememberMe) {
               localStorage.setItem('authToken', res.token);
+              this.router.navigate(['/statistics']);
             } else {
               sessionStorage.setItem('authToken', res.token);
+              this.router.navigate(['/statistics']);
             }
-
-            this.router.navigate(['/statistics']);
           } else {
             this.apiError = 'You do not have permission to access this page';
           }

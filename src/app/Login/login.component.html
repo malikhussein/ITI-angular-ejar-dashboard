@@ -41,10 +41,13 @@
         >
           Identifier is required
         </p>
-        <p class="dang" *ngIf="loginForm.get('identifier')?.getError('invalidIdentifier')">
-          Invalid format. Use a valid email (e.g., user&#64;example.com) or a valid Egyptian number (01xxxxxxxxx).
+        <p
+          class="dang"
+          *ngIf="loginForm.get('identifier')?.getError('invalidIdentifier')"
+        >
+          Invalid format. Use a valid email (e.g., user&#64;example.com) or a
+          valid Egyptian number (01xxxxxxxxx).
         </p>
-        
       </div>
     </div>
 
@@ -67,9 +70,10 @@
           password is Required
         </p>
         <p class="dang" *ngIf="loginForm.get('password')?.getError('pattern')">
-          Password must contain at least one uppercase, one lowercase letter, one number, and one special character
+          Password must be at least 8 characters and contain at least one
+          uppercase letter, one lowercase letter, one number, and one special
+          character.
         </p>
-        
       </div>
     </div>
     <div class="form-check">
@@ -80,11 +84,8 @@
         [ngModelOptions]="{ standalone: true }"
         [(ngModel)]="rememberMe"
       />
-      <label class="form-check-label" for="rememberMe">
-        Remember Me
-      </label>
+      <label class="form-check-label" for="rememberMe"> Remember Me </label>
     </div>
-    
 
     <div class="col-12 text-center">
       <button
