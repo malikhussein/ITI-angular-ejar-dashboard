@@ -45,8 +45,9 @@
           class="dang"
           *ngIf="loginForm.get('identifier')?.getError('invalidIdentifier')"
         >
-          Invalid format. Use a valid email (e.g., user&#64;example.com) or a
-          valid Egyptian number (01xxxxxxxxx).
+          Invalid format. Please enter a valid email (e.g.,user&#64;example.com)
+          or an Egyptian phone number starting with 010, 011, 012, or 015 and
+          exactly 11 digits.
         </p>
       </div>
     </div>
