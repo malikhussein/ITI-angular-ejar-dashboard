@@ -25,9 +25,15 @@ export class StatisticsComponent implements OnInit {
   lastFourProcesses: any[] = [];
   users: any[] = [];
   ComputerCatgory: number = 0;
-  PhonesCatgory: number = 0;
   CamerasCatgory: number = 0;
   HeadphonesCatgory: number = 0;
+  clothes: number = 0;
+  furniture: number = 0;
+  gem: number = 0;
+  kitchen: number = 0;
+  tools: number = 0;
+  gaming: number = 0;
+
   processPieChartData: any[] = [];
   advancedPieChartData: any[] = [];
 
@@ -66,9 +72,14 @@ export class StatisticsComponent implements OnInit {
     // Ensure all category values are numbers and not NaN
     this.advancedPieChartData = [
       { name: 'Computers', value: isNaN(this.ComputerCatgory) ? 0 : this.ComputerCatgory },
-      { name: 'Phones', value: isNaN(this.PhonesCatgory) ? 0 : this.PhonesCatgory },
       { name: 'Cameras', value: isNaN(this.CamerasCatgory) ? 0 : this.CamerasCatgory },
-      { name: 'Headphones', value: isNaN(this.HeadphonesCatgory) ? 0 : this.HeadphonesCatgory },
+      { name: 'clothes', value: isNaN(this.clothes) ? 0 : this.clothes },
+      { name: 'gaming', value: isNaN(this.	tools) ? 0 : this.	gaming },
+      { name: 'furniture', value: isNaN(this.furniture) ? 0 : this.	furniture },
+      { name: 'gem', value: isNaN(this.gem) ? 0 : this.gem },
+      { name: 'kitchen', value: isNaN(this.	kitchen) ? 0 : this.	kitchen },
+      { name: 'tools', value: isNaN(this.	tools) ? 0 : this.	tools },
+
     ];
   }
 
@@ -171,14 +182,27 @@ export class StatisticsComponent implements OnInit {
           this.ComputerCatgory = res.data.filter(
             (item: any) => item.category?.name === 'computers'
           ).length;
-          this.PhonesCatgory = res.data.filter(
-            (item: any) => item.category?.name === 'phones'
-          ).length;
           this.CamerasCatgory = res.data.filter(
             (item: any) => item.category?.name === 'cameras'
           ).length;
           this.HeadphonesCatgory = res.data.filter(
             (item: any) => item.category?.name === 'headphones'
+          ).length;
+
+          this.clothes = res.data.filter(
+            (item: any) => item.category?.name === 'clothes'
+          ).length; 
+            this.furniture = res.data.filter(
+            (item: any) => item.category?.name === 'furniture'
+          ).length; 
+            this.gaming = res.data.filter(
+            (item: any) => item.category?.name === 'gaming'
+          ).length;
+             this.gem = res.data.filter(
+            (item: any) => item.category?.name === 'gem	'
+          ).length;
+          this.tools = res.data.filter(
+            (item: any) => item.category?.name === 'tools'
           ).length;
 
           this.updateAdvancedPieChartData();
