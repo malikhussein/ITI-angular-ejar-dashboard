@@ -133,29 +133,74 @@ export class AllProductsComponent implements OnInit {
     if (!product) return;
 
     const arabicRegex = /[\u0600-\u06FF]/;
+    
+    const nameAllowedCharRegex = /^[a-zA-Z0-9\s-']*$/;
+
+    const hasLettersRegex = /[a-zA-Z]/;
+
     if (field === 'name') {
-      if (!product.name) this.formErrors['name'] = 'Title is required';
-      else if (product.name.length > 29) this.formErrors['name'] = 'Title must be at most 29 characters';
-      else if (arabicRegex.test(product.name)) this.formErrors['name'] = 'No Arabic characters allowed';
-      else delete this.formErrors['name'];
+        if (!product.name) {
+            this.formErrors['name'] = 'Title is required';
+        } else if (product.name.length > 29) {
+            this.formErrors['name'] = 'Title must be at most 29 characters';
+        } else if (arabicRegex.test(product.name)) {
+            this.formErrors['name'] = 'No Arabic characters allowed';
+        } else if (!nameAllowedCharRegex.test(product.name)) {
+            this.formErrors['name'] = "Only letters, numbers, spaces, hyphens, and single quotes are allowed";
+        } else if (!hasLettersRegex.test(product.name)) {
+            this.formErrors['name'] = 'Name must contain at least one letter';
+        } else {
+
+            const nameWithoutSymbols = product.name.replace(/[\s-']/g, '');
+            if (nameWithoutSymbols.length < 3) {
+                this.formErrors['name'] = 'Name must be at least 3 characters (excluding symbols)';
+            } else {
+                delete this.formErrors['name'];
+            }
+        }
     }
+
     if (field === 'description') {
-      if (!product.description) this.formErrors['description'] = 'Description is required';
-      else delete this.formErrors['description'];
+        if (!product.description) {
+            this.formErrors['description'] = 'Description is required';
+        } else if (arabicRegex.test(product.description)) {
+            this.formErrors['description'] = 'No Arabic characters allowed';
+        } else if (!hasLettersRegex.test(product.description)) {
+            this.formErrors['description'] = 'Description must contain at least one letter';
+        } else {
+            const descWithoutSymbols = product.description.replace(/[\s-]/g, '');
+            if (descWithoutSymbols.length < 10) {
+                this.formErrors['description'] = 'Description must be at least 10 characters (excluding symbols)';
+            } else {
+                delete this.formErrors['description'];
+            }
+        }
     }
+
     if (field === 'category') {
-      if (!product.category._id) this.formErrors['category'] = 'Category is required';
-      else delete this.formErrors['category'];
+        if (!product.category._id) {
+            this.formErrors['category'] = 'Category is required';
+        } else {
+            delete this.formErrors['category'];
+        }
     }
+
     if (field === 'status') {
-      if (!product.status) this.formErrors['status'] = 'Status is required';
-      else delete this.formErrors['status'];
+        if (!product.status) {
+            this.formErrors['status'] = 'Status is required';
+        } else {
+            delete this.formErrors['status'];
+        }
     }
+
     if (field === 'price') {
-      if (!product.daily || product.daily <= 0) this.formErrors['price'] = 'Price must be greater than 0';
-      else delete this.formErrors['price'];
+        if (!product.daily || product.daily <= 0) {
+            this.formErrors['price'] = 'Price must be greater than 0';
+        } else {
+            delete this.formErrors['price'];
+        }
     }
-  }
+}
 
   updateProduct() {
     const product = this.editProduct();
@@ -186,7 +231,7 @@ export class AllProductsComponent implements OnInit {
 
     this.productService.updateProduct(updatedData).subscribe({
       next: (response) => {
-       
+
         this.loadProducts();
         this.closeEditModal();
         this.showToastMessage('Product updated successfully');
