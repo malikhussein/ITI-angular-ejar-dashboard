@@ -58,7 +58,7 @@ export class LoginComponent {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^01[0-9]{9}$/;
+    const phoneRegex = /^01[0125][0-9]{8}$/;
 
     if (emailRegex.test(value) || phoneRegex.test(value)) {
       return null; // Valid
