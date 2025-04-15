@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,11 +15,22 @@ export class ProductService {
   }
 
   removeProduct(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}${id}`);
+    return this.http.delete(`${this.baseUrl}${id}`, this.getAuthHeader());
   }
 
   updateProduct(updatedData: any): Observable<any> {
     const url = `${this.baseUrl}${updatedData._id}`;
-    return this.http.post(url, updatedData);
+    return this.http.post(url, updatedData, this.getAuthHeader());
+  }
+
+  private getAuthHeader() {
+    const token =
+      localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }),
+    };
   }
 }

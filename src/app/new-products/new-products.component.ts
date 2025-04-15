@@ -8,6 +8,7 @@ import { CategoryService } from '../services/category.service';
 import { ShortIdPipe } from '../pipes/short-id.pipe';
 
 import { FormsModule } from '@angular/forms';
+import { Product } from '../models/product.interface';
 
 @Component({
   selector: 'app-new-products',
@@ -61,9 +62,9 @@ export class NewProductsComponent implements OnInit {
     this.loading.set(true);
     this._ProductService.getallProducts().subscribe({
       next: (res) => {
-        console.log(res);
+        const confirmed = res.data.filter((item :Product) => item.confirmed === false);
+        this.products.set(confirmed);
         
-        this.products.set(res.data);
         this.loading.set(false);
       },
       error: () => {
@@ -178,11 +179,9 @@ export class NewProductsComponent implements OnInit {
       images: product.images,
     };
 
-    // console.log('Updating product with data:', updatedData);
 
     this._ProductService.updateProduct(updatedData).subscribe({
       next: (response) => {
-        console.log('Update response:', response);
         this.loadProducts();
         this.closeEditModal();
         this.showToastMessage('Product updated successfully');
@@ -309,7 +308,7 @@ export class NewProductsComponent implements OnInit {
   @Input() product: any;
 
   confirmProduct() {
-    console.log(this.selectedProduct);
+   
 
     const updatedData = {
       ...this.selectedProduct,
@@ -317,7 +316,7 @@ export class NewProductsComponent implements OnInit {
       confirmMessage: 'Product confirmed by admin',
       status: 'available',
     };
-    console.log(updatedData);
+   
 
     this._ProductService.updateProduct(updatedData).subscribe({
       next: () => {

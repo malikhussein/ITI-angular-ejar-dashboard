@@ -197,16 +197,25 @@ export class AllCategoriesComponent implements OnInit {
   validateField(field: 'name' | 'icon', isAddModal: boolean) {
     const category = isAddModal ? this.newCategory() : this.editCategory();
     if (!category) return;
+
     if (field === 'name') {
-      if (!category.name || category.name.trim().length < 3)
+      if (!category.name || category.name.trim().length < 3) {
         this.formErrors['name'] = 'Category name must be at least 3 characters';
-      else if (category.name.trim().length > 15)
+      } else if (category.name.trim().length > 15) {
         this.formErrors['name'] = 'Category name cannot exceed 15 characters';
-      else this.formErrors['name'] = '';
+      } else if (!/^[a-zA-Z\s]+$/.test(category.name.trim())) {
+        this.formErrors['name'] = 'Category name must contain only English letters and spaces';
+      } else {
+        this.formErrors['name'] = '';
+      }
     }
+
     if (field === 'icon') {
-      if (!category.icon) this.formErrors['icon'] = 'Category icon is required';
-      else this.formErrors['icon'] = '';
+      if (!category.icon) {
+        this.formErrors['icon'] = 'Category icon is required';
+      } else {
+        this.formErrors['icon'] = '';
+      }
     }
   }
 
@@ -214,7 +223,7 @@ export class AllCategoriesComponent implements OnInit {
     this.validateField('name', true);
     this.validateField('icon', true);
     if (Object.values(this.formErrors).some((error) => error)) {
-      this.showToastMessage('Please fix the validation errors', 'error');
+      this.showToastMessage('Please check fields', 'error');
       return;
     }
     const category = this.newCategory();
@@ -235,7 +244,7 @@ export class AllCategoriesComponent implements OnInit {
     this.validateField('name', false);
     this.validateField('icon', false);
     if (Object.values(this.formErrors).some((error) => error)) {
-      this.showToastMessage('Please fix the validation errors', 'error');
+      this.showToastMessage('Please check fields', 'error');
       return;
     }
     const category = this.editCategory();

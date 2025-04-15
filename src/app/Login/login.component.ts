@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -12,7 +13,13 @@ import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    FormsModule,
+  ],
 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -21,6 +28,7 @@ export class LoginComponent {
   loginForm!: FormGroup;
   apiError: string | null = null;
   isLoading: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(
     private _FormBuilder: FormBuilder,
@@ -45,14 +53,20 @@ export class LoginComponent {
 
   identifierValidator(control: any) {
     const value = control.value;
-    if (!value) return { required: true };
+    if (!value || value.trim() === '') {
+      return { required: true };
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^01[0-9]{9}$/;
 
-    if (emailRegex.test(value) || phoneRegex.test(value)) return null;
+    if (emailRegex.test(value) || phoneRegex.test(value)) {
+      return null; // Valid
+    }
 
-    return { invalidIdentifier: true };
+    return {
+      invalidIdentifier: true,
+    };
   }
 
   onSubmit() {
@@ -77,9 +91,13 @@ export class LoginComponent {
           this.isLoading = false;
 
           if (userRole === 'admin') {
-            localStorage.setItem('authToken', res.token);
-
-            this.router.navigate(['/statistics']);
+            if (this.rememberMe) {
+              localStorage.setItem('authToken', res.token);
+              this.router.navigate(['/statistics']);
+            } else {
+              sessionStorage.setItem('authToken', res.token);
+              this.router.navigate(['/statistics']);
+            }
           } else {
             this.apiError = 'You do not have permission to access this page';
           }

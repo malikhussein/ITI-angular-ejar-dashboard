@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
 import { ShortIdPipe } from '../pipes/short-id.pipe';
+import { Product } from '../models/product.interface';
 
 @Component({
   selector: 'app-all-products',
@@ -63,7 +64,10 @@ export class AllProductsComponent implements OnInit {
     this.loading.set(true);
     this.productService.getallProducts().subscribe({
       next: (res) => {
-        this.products.set(res.data);
+        const confirmed = res.data.filter((item :Product) => item.confirmed === true);
+        this.products.set(confirmed);
+
+
         this.loading.set(false);
       },
       error: () => {
@@ -178,11 +182,11 @@ export class AllProductsComponent implements OnInit {
       images: product.images,
     };
 
-    // console.log('Updating product with data:', updatedData);
+
 
     this.productService.updateProduct(updatedData).subscribe({
       next: (response) => {
-        console.log('Update response:', response);
+       
         this.loadProducts();
         this.closeEditModal();
         this.showToastMessage('Product updated successfully');

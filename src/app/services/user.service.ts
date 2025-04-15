@@ -35,7 +35,7 @@ export class UserService {
   
   private getAuthHeader() {
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-console.log('Sending token:', token); // Check if null or undefined
+
 
     return {
     headers: new HttpHeaders({
