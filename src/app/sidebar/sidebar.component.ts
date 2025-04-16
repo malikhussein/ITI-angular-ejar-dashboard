@@ -27,12 +27,12 @@ export class SidebarComponent {
       label: 'New Users',
       icon: 'fas fa-user-plus',
     },
+    { path: '/users', label: 'Users', icon: 'fas fa-users' },
     {
       path: '/new-products',
       label: 'New Products',
       icon: 'fas fa-box-open',
     },
-    { path: '/users', label: 'Users', icon: 'fas fa-users' },
     { path: '/products', label: 'Products', icon: 'fas fa-boxes' },
     { path: '/processes', label: 'Processes', icon: 'fas fa-tasks' },
     { path: '/categories', label: 'Categories', icon: 'fas fa-tags' },
